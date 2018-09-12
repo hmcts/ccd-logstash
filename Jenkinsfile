@@ -32,7 +32,7 @@ node {
                                 packerBuild {
                                         bin = './packer' // optional location of packer install
                                         template = 'packer_images/logstash.packer.json'
-                                        var = ["resource_group_name=ccd-logstash-saat"] // optional variable setting
+                                        var = ["resource_group_name=${productName}-logstash-${environment}"] // optional variable setting
                                 }
                         }
                 }
