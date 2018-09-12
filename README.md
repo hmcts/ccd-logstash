@@ -1,4 +1,4 @@
-# cnp-module-elk
+# ccd-logstash
 
-This repository enables you to build a Logstash image and deploy a Logstash.
+This repository enables you to build a Logstash image and deploy CCD Logstash.
 

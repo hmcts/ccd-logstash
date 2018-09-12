@@ -5,7 +5,6 @@ properties([
         parameters([
                 string(name: 'PRODUCT_NAME', defaultValue: 'ccd', description: ''),
                 choice(name: 'ENVIRONMENT', choices: 'saat\nsprod\nsandbox', description: 'Environment where code should be build and deployed'),
-                booleanParam(name: 'DEPLOY_ES_CLUSTER', defaultValue: true, description: 'set to true to deploy a new ElasticSearch cluster'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
         ])
@@ -13,9 +12,8 @@ properties([
 
 productName = params.PRODUCT_NAME
 environment = params.ENVIRONMENT
-env.TF_VAR_deploy_logstash=params.DEPLOY_LOGSTASH
 
-if (params.DEPLOY_ES_CLUSTER == true) {
+if (params.DEPLOY_LOGSTASH == true) {
         withInfrastructurePipeline(productName, environment, 'sandbox')
 }
 node {
@@ -88,31 +86,31 @@ def packerBuild(body) {
                 throw new Exception('The required template parameter was not set.')
         }
         config.bin = config.bin == null ? 'packer' : config.bin
-                try {
-                        cmd = "${config.bin} build -color=false"
-                        if (config.var_file != null) {
-                                if (fileExists(config.var_file)) {
-                                        cmd += " -var_file=${config.var_file}"
-                                }
-                                else {
-                                        throw new Exception("The var file ${config.var_file} does not exist!")
-                                }
+        try {
+                cmd = "${config.bin} build -color=false"
+                if (config.var_file != null) {
+                        if (fileExists(config.var_file)) {
+                                cmd += " -var_file=${config.var_file}"
                         }
-                        if (config.var != null) {
-                                config.var.each() {
-                                        cmd += " -var ${it}"
-                                }
+                        else {
+                                throw new Exception("The var file ${config.var_file} does not exist!")
                         }
-                        if (config.only != null) {
-                                cmd += " -only=${config.only}"
+                }
+                if (config.var != null) {
+                        config.var.each() {
+                                cmd += " -var ${it}"
                         }
+                }
+                if (config.only != null) {
+                        cmd += " -only=${config.only}"
+                }
 
-                        sh "${cmd} ${config.template}"
-                }
-                catch(Exception error) {
-                        print 'Failure using packer build.'
-                        throw error
-                }
-                print 'Packer build artifact created successfully.'
+                sh "${cmd} ${config.template}"
+        }
+        catch(Exception error) {
+                print 'Failure using packer build.'
+                throw error
+        }
+        print 'Packer build artifact created successfully.'
 
 }
