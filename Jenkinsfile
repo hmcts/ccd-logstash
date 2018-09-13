@@ -33,14 +33,10 @@ node {
                                         echo "pr ${env.MYENVIRNMOMENT}"
                                         echo "pr ${environment}"
 
-                                        packerBuild { env ->
-                                                echo "pr2 ${env.MYENVIRNMOMENT}"
-//                                                echo "pr2 ${environment}"
-//                                                echo "pr2 ${owner.environment}"
-//                                                echo "pr2 ${this.environment}"
+                                        packerBuild {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
-                                                var = ["resource_group_name=ccd-logstash-${env.MYENVIRNMOMENT}"] // optional variable setting
+//                                                var = ["resource_group_name=ccd-logstash-${env.MYENVIRNMOMENT}"] // optional variable setting
                                         }
                                 }
                         }
@@ -89,7 +85,7 @@ def packerBuild(body) {
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
-        body(env)
+        body()
 
         if (config.template == null) {
                 throw new Exception('The required template parameter was not set.')
@@ -109,6 +105,8 @@ def packerBuild(body) {
                         config.var.each() {
                                 cmd += " -var ${it}"
                         }
+                        resourceGroupVar = "resource_group_name=ccd-logstash-${environment}"
+                        cmd += " -var $resourceGroupVar"
                 }
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
