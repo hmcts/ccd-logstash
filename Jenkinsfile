@@ -17,30 +17,25 @@ if (params.DEPLOY_LOGSTASH == true) {
         withInfrastructurePipeline(productName, environment, 'sandbox')
 }
 node {
-        withEnv(["MYENVIRNMOMENT=${environment}"]) {
-                env.PATH = "$env.PATH:/usr/local/bin"
-                if (params.BUILD_LOGSTASH_IMAGE == true) {
-                        stage("Packer Install - ${environment}") {
-                                packerInstall {
-                                        install_path = '.' // optional location to install packer
-                                        platform = 'linux_amd64' // platform where packer will be installed
-                                        version = '1.1.3' // version of packer to install
-                                }
-                        }
-                        //fixme remove hardcoded values
-                        stage("Packer Build Image - ${environment}") {
-                                withSubscription('sandbox') {
-                                        echo "pr ${env.MYENVIRNMOMENT}"
-                                        echo "pr ${environment}"
+    env.PATH = "$env.PATH:/usr/local/bin"
+    if (params.BUILD_LOGSTASH_IMAGE == true) {
+            stage("Packer Install - ${environment}") {
+                    packerInstall {
+                            install_path = '.' // optional location to install packer
+                            platform = 'linux_amd64' // platform where packer will be installed
+                            version = '1.1.3' // version of packer to install
+                    }
+            }
+            stage("Packer Build Image - ${environment}") {
+                    withSubscription('sandbox') {
+                            packerBuild {
+                                    bin = './packer' // optional location of packer install
+                                    template = 'packer_images/logstash.packer.json'
+                                    //var = ["name=value"]
+                            }
+                    }
+            }
 
-                                        packerBuild {
-                                                bin = './packer' // optional location of packer install
-                                                template = 'packer_images/logstash.packer.json'
-//                                                var = ["resource_group_name=ccd-logstash-${env.MYENVIRNMOMENT}"] // optional variable setting
-                                        }
-                                }
-                        }
-                }
         }
 }
 
@@ -106,7 +101,7 @@ def packerBuild(body) {
                                 cmd += " -var ${it}"
                         }
                 }
-                resourceGroupVar = "resource_group_name=ccd-logstash-${environment}"
+                resourceGroupVar = "resource_group_name=$productName-logstash-$environment"
                 cmd += " -var $resourceGroupVar"
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
