@@ -34,6 +34,8 @@ node {
                                         echo "pr ${environment}"
 
                                         packerBuild {
+                                                echo "pr2 ${env.MYENVIRNMOMENT}"
+                                                echo "pr2 ${environment}"
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
                                                 var = ["resource_group_name=ccd-logstash-${-> env.MYENVIRNMOMENT}"] // optional variable setting
