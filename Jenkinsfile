@@ -30,10 +30,13 @@ node {
                         //fixme remove hardcoded values
                         stage("Packer Build Image - ${environment}") {
                                 withSubscription('sandbox') {
+                                        echo "pr ${env.MYENVIRNMOMENT}"
+                                        echo "pr ${environment}"
+
                                         packerBuild {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
-                                                var = ["resource_group_name=ccd-logstash-${env.MYENVIRNMOMENT}"] // optional variable setting
+                                                var = ["resource_group_name=ccd-logstash-${-> env.MYENVIRNMOMENT}"] // optional variable setting
                                         }
                                 }
                         }
