@@ -19,6 +19,7 @@ if (params.DEPLOY_LOGSTASH == true) {
 node {
     env.PATH = "$env.PATH:/usr/local/bin"
     if (params.BUILD_LOGSTASH_IMAGE == true) {
+            echo "PR 2 subscription: $env"
             stage("Packer Install - ${environment}") {
                     packerInstall {
                             install_path = '.' // optional location to install packer
