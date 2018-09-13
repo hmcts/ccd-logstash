@@ -105,12 +105,13 @@ def packerBuild(body) {
                                 throw new Exception("The var file ${config.var_file} does not exist!")
                         }
                 }
-//                if (config.var != null) {
-//                        config.var.each() {
-//                                cmd += " -var ${it}"
-//                        }
-//                }
-                cmd += " -var resource_group_name=ccd-logstash-sandbox"
+                config.var = ["resource_group_name=ccd-logstash-sandbox"]
+                if (config.var != null) {
+                        config.var.each() {
+                                cmd += " -var ${it}"
+                        }
+                }
+
 
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
