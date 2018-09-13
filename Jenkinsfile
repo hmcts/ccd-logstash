@@ -110,7 +110,7 @@ def packerBuild(body) {
 //                                cmd += " -var ${it}"
 //                        }
 //                }
-                cmd += " -var resource_group_name=resource_group_name=ccd-logstash-sandbox"
+                cmd += " -var resource_group_name=ccd-logstash-sandbox"
 
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
