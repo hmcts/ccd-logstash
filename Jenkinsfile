@@ -34,9 +34,13 @@ node {
                                         echo "pr ${environment}"
 
                                         packerBuild {
+//                                                echo "pr2 ${env.MYENVIRNMOMENT}"
+//                                                echo "pr2 ${environment}"
+//                                                echo "pr2 ${owner.environment}"
+//                                                echo "pr2 ${this.environment}"
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
-                                                //var = ["resource_group_name=ccd-logstash-sandbox"] // optional variable setting
+                                                var = ["resource_group_name=ccd-logstash-sandbox"] // optional variable setting
                                         }
                                 }
                         }
@@ -106,9 +110,6 @@ def packerBuild(body) {
                                 cmd += " -var ${it}"
                         }
                 }
-                resGroupVar="$productName-logstash-$environment"
-                cmd += " -var resource_group_name=$resGroupVar"
-
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
                 }
