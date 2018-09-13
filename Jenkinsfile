@@ -89,7 +89,7 @@ def packerBuild(body) {
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
-        body.call(env)
+        body(env)
 
         if (config.template == null) {
                 throw new Exception('The required template parameter was not set.')
