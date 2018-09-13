@@ -105,9 +105,9 @@ def packerBuild(body) {
                         config.var.each() {
                                 cmd += " -var ${it}"
                         }
-                        resourceGroupVar = "resource_group_name=ccd-logstash-${environment}"
-                        cmd += " -var $resourceGroupVar"
                 }
+                resourceGroupVar = "resource_group_name=ccd-logstash-${environment}"
+                cmd += " -var $resourceGroupVar"
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
                 }
