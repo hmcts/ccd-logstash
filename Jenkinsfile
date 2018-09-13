@@ -40,7 +40,7 @@ node {
 //                                                echo "pr2 ${this.environment}"
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
-                                                var = ["resource_group_name=ccd-logstash-sandbox"] // optional variable setting
+                                                var = ["resource_group_name=ccd-logstash-${env.MYENVIRNMOMENT}"] // optional variable setting
                                         }
                                 }
                         }
