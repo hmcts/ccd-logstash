@@ -33,8 +33,8 @@ node {
                                         echo "pr ${env.MYENVIRNMOMENT}"
                                         echo "pr ${environment}"
 
-                                        packerBuild {
-//                                                echo "pr2 ${env.MYENVIRNMOMENT}"
+                                        packerBuild { env ->
+                                                echo "pr2 ${env.MYENVIRNMOMENT}"
 //                                                echo "pr2 ${environment}"
 //                                                echo "pr2 ${owner.environment}"
 //                                                echo "pr2 ${this.environment}"
@@ -53,7 +53,7 @@ def packerInstall(body) {
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
-        body()
+        body(env)
 
         // input checking
         config.install_path = config.install_path == null ? '/usr/bin' : config.install_path
