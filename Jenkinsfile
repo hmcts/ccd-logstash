@@ -48,12 +48,12 @@ node {
         }
 }
 
-def packerInstall(body) {
+def packerInstall() {
         // evaluate the body block and collect configuration into the object
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
-        body(env)
+        body()
 
         // input checking
         config.install_path = config.install_path == null ? '/usr/bin' : config.install_path
@@ -89,7 +89,7 @@ def packerBuild(body) {
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
-        body()
+        body.call(env)
 
         if (config.template == null) {
                 throw new Exception('The required template parameter was not set.')
