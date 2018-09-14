@@ -40,7 +40,7 @@ node {
 //                                                echo "pr2 ${this.environment}"
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
-                                                var = ["resource_group_name=ccd-logstash-&{environment}"] // optional variable setting
+                                                var = ["resource_group_name=ccd-logstash-sandbox"] // optional variable setting
                                         }
                                 }
                         }
@@ -113,13 +113,13 @@ def packerBuild(body) {
                 echo "PR ${environment}"
                 echo "PR ${cmd.toString()}"
 
-                cmd.replace("&{environment}", "${environment}")
+//                cmd.replace("&{environment}", "${environment}")
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
                 }
                 echo "PR ${cmd.replace("&{environment}", environment)}"
                 sh "ls -al packer_images/logstash.packer.json"
-                sh "${cmd.replace("&{environment}", environment)} ${config.template}"
+                sh "${cmd} ${config.template}"
         }
         catch(Exception error) {
                 print 'Failure using packer build.'
