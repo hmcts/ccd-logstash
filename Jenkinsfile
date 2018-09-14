@@ -19,10 +19,6 @@ node {
                 checkout scm
         }
 
-        if (params.DEPLOY_LOGSTASH == true) {
-                withInfrastructurePipeline(productName, environment, 'sandbox')
-        }
-
         env.PATH = "$env.PATH:/usr/local/bin"
         if (params.BUILD_LOGSTASH_IMAGE == true) {
                 stage("Packer Install - ${environment}") {
@@ -38,10 +34,14 @@ node {
                                 packerBuild {
                                         bin = './packer' // optional location of packer install
                                         template = 'packer_images/logstash.packer.json'
-                                        var = ["resource_group_name=ccd-logstash-saat"] // optional variable setting
+                                        //var = ["name=value"] // optional variable setting
                                 }
                         }
                 }
+        }
+
+        if (params.DEPLOY_LOGSTASH == true) {
+                withInfrastructurePipeline(productName, environment, 'sandbox')
         }
 }
 
@@ -102,6 +102,7 @@ def packerBuild(body) {
                                 throw new Exception("The var file ${config.var_file} does not exist!")
                         }
                 }
+                config.var += "resource_group_name=${productName}-logstash-${environment}"
                 if (config.var != null) {
                         config.var.each() {
                                 cmd += " -var ${it}"
