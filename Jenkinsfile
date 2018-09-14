@@ -102,7 +102,7 @@ def packerBuild(body) {
                                 throw new Exception("The var file ${config.var_file} does not exist!")
                         }
                 }
-                if (config.var != null) {
+                if (config.var == null) {
                         config.var = []
                 }
                 config.var.add("resource_group_name=${productName}-logstash-${environment}")
