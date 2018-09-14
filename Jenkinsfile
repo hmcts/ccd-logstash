@@ -110,12 +110,14 @@ def packerBuild(body) {
                                 cmd += " -var ${it}"
                         }
                 }
+                echo "PR ${environment}"
+                echo "PR ${cmd.toString()}"
 
                 cmd.replace("&{environment}", "${environment}")
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
                 }
-
+                echo "PR ${cmd.toString()}"
                 sh "${cmd} ${config.template}"
         }
         catch(Exception error) {
