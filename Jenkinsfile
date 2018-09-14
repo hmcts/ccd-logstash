@@ -40,7 +40,7 @@ node {
 //                                                echo "pr2 ${this.environment}"
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
-                                                //var = ["resource_group_name=ccd-logstash-sandbox"] // optional variable setting
+                                                var = ["resource_group_name=ccd-logstash-&{environment}"] // optional variable setting
                                         }
                                 }
                         }
@@ -105,14 +105,13 @@ def packerBuild(body) {
                                 throw new Exception("The var file ${config.var_file} does not exist!")
                         }
                 }
-                config.var = ["resource_group_name=ccd-logstash-sandbox"]
                 if (config.var != null) {
                         config.var.each() {
                                 cmd += " -var ${it}"
                         }
                 }
 
-
+                cmd.replace("&{environment}", "${environment}")
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
                 }
