@@ -13,10 +13,16 @@ properties([
 productName = params.PRODUCT_NAME
 environment = params.ENVIRONMENT
 
-if (params.DEPLOY_LOGSTASH == true) {
-        withInfrastructurePipeline(productName, environment, 'sandbox')
-}
 node {
+        stage('Checkout') {
+                deleteDir()
+                checkout scm
+        }
+
+        if (params.DEPLOY_LOGSTASH == true) {
+                withInfrastructurePipeline(productName, environment, 'sandbox')
+        }
+
         env.PATH = "$env.PATH:/usr/local/bin"
         if (params.BUILD_LOGSTASH_IMAGE == true) {
                 stage("Packer Install - ${environment}") {
