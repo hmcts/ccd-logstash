@@ -110,15 +110,10 @@ def packerBuild(body) {
                                 cmd += " -var ${it}"
                         }
                 }
-                echo "PR ${environment}"
-                echo "PR ${cmd.toString()}"
-
-//                cmd.replace("&{environment}", "${environment}")
                 if (config.only != null) {
                         cmd += " -only=${config.only}"
                 }
-                echo "PR ${cmd.replace("&{environment}", environment)}"
-                sh "ls -al packer_images/logstash.packer.json"
+
                 sh "${cmd} ${config.template}"
         }
         catch(Exception error) {
