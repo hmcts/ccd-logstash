@@ -1,4 +1,4 @@
 # ccd-logstash
 
-This repository enables you to build a Logstash image and deploy CCD Logstash.
+This repository contains a pipeline that allows build a Logstash image and deploy an instance Logstash for CCD.
 
