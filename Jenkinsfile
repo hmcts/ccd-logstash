@@ -1,6 +1,8 @@
 #!groovy
 @Library("Infrastructure") _
 
+import uk.gov.hmcts.contino.azure.KeyVault
+
 properties([
         parameters([
                 string(name: 'PRODUCT_NAME', defaultValue: 'ccd', description: ''),
