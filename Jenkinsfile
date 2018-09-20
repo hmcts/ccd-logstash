@@ -39,10 +39,17 @@ node {
 
                                 db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST")
                                 echo "retrieved db host: ${db_host}"
+                                db_port = keyVault.find("ccd-data-store-api-POSTGRES-PORT")
+                                echo "retrieved db port: ${db_port}"
+                                db_pass = keyVault.find("ccd-data-store-api-POSTGRES-PASS")
+                                db_user = keyVault.find("ccd-data-store-api-POSTGRES-USER")
+                                echo "retrieved db user: ${db_user}"
+                                db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE")
+                                echo "retrieved db name: ${db_name}"
 
-                                if (db_host) {
-                                        environmentVariables.add("TF_VAR_DB_HOST=${db_host}")
-                                }
+
+                                environmentVariables.add("DB_HOST=${db_host}")
+
 
                                 withEnv(environmentVariables) {
 
