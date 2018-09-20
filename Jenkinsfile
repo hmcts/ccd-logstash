@@ -131,7 +131,7 @@ def packerBuild(body) {
                         config.var = []
                 }
                 config.var.add("resource_group_name=${productName}-logstash-${environment}")
-                config.var.add("db_url=${env.DB_URL}")
+//                config.var.add("db_url=${env.DB_URL}")
                 config.var.add("db_user=${env.DB_USER}")
                 config.var.add("db_pass=${env.DB_PWD}")
                 config.var.each() {
