@@ -31,10 +31,24 @@ node {
                 //fixme remove hardcoded values
                 stage("Packer Build Image - ${environment}") {
                         withSubscription('sandbox') {
-                                packerBuild {
-                                        bin = './packer' // optional location of packer install
-                                        template = 'packer_images/logstash.packer.json'
-                                        //var = ["name=value"] // optional variable setting
+
+                                KeyVault keyVault = new KeyVault(this, 'sandbox', "${productName}-${environment}")
+                                def environmentVariables = []
+
+                                db_host:String  = keyVault.find("ccd-data-store-api-POSTGRES-HOST")
+                                echo "retrieved db host: ${db_host}"
+
+                                if (db_host) {
+                                        environmentVariables.add("TF_VAR_DB_HOST=${db_host}")
+                                }
+
+                                withEnv(environmentVariables) {
+
+                                        packerBuild {
+                                                bin = './packer' // optional location of packer install
+                                                template = 'packer_images/logstash.packer.json'
+                                                //var = ["name=value"] // optional variable setting
+                                        }
                                 }
                         }
                 }
@@ -83,6 +97,8 @@ def download_file(String url, String dest) {
 }
 
 def packerBuild(body) {
+        echo "env db host: ${env.DB_HOST}"
+
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
