@@ -46,13 +46,11 @@ node {
                                 echo "retrieved db user: ${db_user}"
                                 db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE")
                                 echo "retrieved db name: ${db_name}"
-
-
-                                environmentVariables.add("DB_HOST=${db_host}")
-
+                                environmentVariables.add("DB_URL=jdbc:postgresql://$db_host:$db_port/$db_name?ssl=true")
+                                environmentVariables.add("DB_USER=$db_user")
+                                environmentVariables.add("DB_PWD=$db_pass")
 
                                 withEnv(environmentVariables) {
-
                                         packerBuild {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
@@ -106,8 +104,6 @@ def download_file(String url, String dest) {
 }
 
 def packerBuild(body) {
-        echo "env db host: ${env.DB_HOST}"
-
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
@@ -131,6 +127,9 @@ def packerBuild(body) {
                         config.var = []
                 }
                 config.var.add("resource_group_name=${productName}-logstash-${environment}")
+                config.var.add("db_url=${env.DB_URL}")
+                config.var.add("db_user=${env.DB_USER}")
+                config.var.add("db_pass=${env.DB_PWD}")
                 config.var.each() {
                         cmd += " -var ${it}"
                 }
