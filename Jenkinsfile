@@ -46,7 +46,7 @@ node {
                                 echo "retrieved db user: ${db_user}"
                                 db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE")
                                 echo "retrieved db name: ${db_name}"
-                                environmentVariables.add("DB_URL=jdbc:postgresql://$db_host:$db_port/$db_name?ssl=true")
+                                environmentVariables.add("DB_URL=jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true")
                                 environmentVariables.add("DB_USER=$db_user")
                                 environmentVariables.add("DB_PWD=$db_pass")
 
