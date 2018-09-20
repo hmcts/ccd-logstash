@@ -50,6 +50,21 @@ node {
                                 environmentVariables.add("DB_USER=$db_user")
                                 environmentVariables.add("DB_PWD=$db_pass")
 
+                                def source = new File('packer_images/logstash.conf.template') //Hello World
+                                def dest = new File('packer_images/logstash.conf') //blank
+
+                                copyAndReplaceText(source, dest) {
+                                        it.replaceAll('${DB_URL}', "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true")
+                                }
+
+                                copyAndReplaceText(source, dest) {
+                                        it.replaceAll('${DB_USER}', "$db_user")
+                                }
+
+                                copyAndReplaceText(source, dest) {
+                                        it.replaceAll('${DB_PWD}', "$db_pass")
+                                }
+
                                 withEnv(environmentVariables) {
                                         packerBuild {
                                                 bin = './packer' // optional location of packer install
@@ -150,4 +165,8 @@ def packerBuild(body) {
         }
         print 'Packer build artifact created successfully.'
 
+}
+
+def copyAndReplaceText(source, dest, Closure replaceText){
+        dest.write(replaceText(source.text))
 }
