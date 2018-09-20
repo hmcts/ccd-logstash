@@ -47,12 +47,20 @@
     },
     {
       "type": "shell",
+      "inline": ["export DB_URL={user `db_url`}}",
+        "export DB_PORT={user `db_port`}}",
+        "export DB_PWD={user `db_pass`}}"
+      ]
+    },
+    {
+      "type": "shell",
       "script": "packer_images/install_logstash.sh",
       "environment_vars": [ "LOGSTASH_VERSION={{user `logstash_version`}}",
         "DB_URL={{user `db_url`}}",
         "DB_USER={{user `db_user`}}",
         "DB_PWD={{user `db_pass`}}"],
       "execute_command": "echo '' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'"
+
     }
   ]
 }
