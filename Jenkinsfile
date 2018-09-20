@@ -104,6 +104,10 @@ def download_file(String url, String dest) {
 }
 
 def packerBuild(body) {
+        echo "url env var: $env.DB_URL"
+        echo "user env var: $env.DB_USER"
+        echo "pass env var: $env.DB_PWD"
+
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = config
