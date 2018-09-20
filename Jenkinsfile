@@ -37,7 +37,7 @@ node {
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${productName}-${environment}")
                                 def environmentVariables = []
 
-                                db_host:String  = keyVault.find("ccd-data-store-api-POSTGRES-HOST")
+                                db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST")
                                 echo "retrieved db host: ${db_host}"
 
                                 if (db_host) {
