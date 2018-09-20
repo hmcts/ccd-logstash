@@ -47,7 +47,10 @@
     },
     {
       "type": "shell",
-      "inline": ["export DB_URL={{user `db_url`}}"]
+      "inline": ["export DB_URL='{{user `db_url`}}'",
+        "export DB_PORT='{{user `db_port`}}'",
+        "export DB_PWD='{{user `db_pass`}}'"
+      ]
     },
     {
       "type": "shell",
