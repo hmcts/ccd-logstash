@@ -26,4 +26,3 @@ sudo chmod 777 /usr/share/logstash/data
 # start Logstash as a service
 systemctl daemon-reload
 systemctl enable logstash.service
-sudo service logstash start
