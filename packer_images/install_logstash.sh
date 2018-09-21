@@ -23,5 +23,7 @@ wget -q https://jdbc.postgresql.org/download/postgresql-42.2.2.jar
 mv postgresql-42.2.2.jar /usr/share/logstash/postgresql-42.2.2.jar
 sudo chmod 777 /usr/share/logstash/data
 
-#FIXME Running Logstash as a service
-sudo systemctl start logstash.service
+# start Logstash as a service
+systemctl daemon-reload
+systemctl enable logstash.service
+sudo service logstash start
