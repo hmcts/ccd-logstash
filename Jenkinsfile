@@ -37,14 +37,14 @@ node {
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${productName}-${environment}")
                                 def environmentVariables = []
 
-                                db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST")
+                                db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST").trim()
                                 echo "retrieved db host: ${db_host}"
-                                db_port = keyVault.find("ccd-data-store-api-POSTGRES-PORT")
+                                db_port = keyVault.find("ccd-data-store-api-POSTGRES-PORT").trim()
                                 echo "retrieved db port: ${db_port}"
-                                db_pass = keyVault.find("ccd-data-store-api-POSTGRES-PASS")
-                                db_user = keyVault.find("ccd-data-store-api-POSTGRES-USER")
+                                db_pass = keyVault.find("ccd-data-store-api-POSTGRES-PASS").trim()
+                                db_user = keyVault.find("ccd-data-store-api-POSTGRES-USER").trim()
                                 echo "retrieved db user: ${db_user}"
-                                db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE")
+                                db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE").trim()
                                 echo "retrieved db name: ${db_name}"
                                 db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
                                 environmentVariables.add("DB_URL=$db_url")
