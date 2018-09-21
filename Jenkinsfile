@@ -55,6 +55,8 @@ node {
                                 sh "sed -i 's/DB_USER/${db_user}/g' packer_images/logstash.conf"
                                 sh "sed -i 's/DB_PWD/${db_pass}/g' packer_images/logstash.conf"
 
+                                sh "cat packer_images/logstash.conf"
+
                                 withEnv(environmentVariables) {
                                         packerBuild {
                                                 bin = './packer' // optional location of packer install
