@@ -16,8 +16,8 @@ fi
 
 # systemctl status logstash
 
-mv logstash.conf /usr/share/logstash/logstash.conf
 sudo cp logstash.conf /etc/logstash/conf.d
+mv logstash.conf /usr/share/logstash/logstash.conf
 
 wget -q https://jdbc.postgresql.org/download/postgresql-42.2.2.jar
 mv postgresql-42.2.2.jar /usr/share/logstash/postgresql-42.2.2.jar

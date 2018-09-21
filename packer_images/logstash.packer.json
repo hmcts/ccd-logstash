@@ -6,7 +6,8 @@
     "client_secret": "{{env `ARM_CLIENT_SECRET`}}",
     "resource_group_name": "",
     "ssh_user": "ubuntu",
-    "ssh_pass": "password123!"
+    "ssh_pass": "password123!",
+    "logstash_version": "6.3.0-1"
   },
   "builders": [{
     "type": "azure-arm",
