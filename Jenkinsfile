@@ -53,7 +53,7 @@ node {
 
 
 //                                sh "sed -i 's|DB_URL|${db_url}|' packer_images/logstash.conf"
-                                sh "sed -i 's|DB_USER|${db_user}|' packer_images/logstash.conf"
+                                sh "sed -i 's|DB_USER|ddddddd|' packer_images/logstash.conf"
 //                                sh "sed -i 's|DB_PWD|${db_pass}|' packer_images/logstash.conf"
 
                                 sh "cat packer_images/logstash.conf"
