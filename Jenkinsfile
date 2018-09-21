@@ -46,24 +46,14 @@ node {
                                 echo "retrieved db user: ${db_user}"
                                 db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE")
                                 echo "retrieved db name: ${db_name}"
-                                environmentVariables.add("DB_URL=jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true")
+                                db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
+                                environmentVariables.add("DB_URL=$db_url")
                                 environmentVariables.add("DB_USER=$db_user")
                                 environmentVariables.add("DB_PWD=$db_pass")
 
-                                def source = new File('packer_images/logstash.conf.template') //Hello World
-                                def dest = new File('packer_images/logstash.conf') //blank
-
-                                copyAndReplaceText(source, dest) {
-                                        it.replaceAll('${DB_URL}', "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true")
-                                }
-
-                                copyAndReplaceText(source, dest) {
-                                        it.replaceAll('${DB_USER}', "$db_user")
-                                }
-
-                                copyAndReplaceText(source, dest) {
-                                        it.replaceAll('${DB_PWD}', "$db_pass")
-                                }
+                                sh "sed -i 's/DB_URL/${db_url}/g' packer_images/logstash.conf"
+                                sh "sed -i 's/DB_USER/${db_user}/g' packer_images/logstash.conf"
+                                sh "sed -i 's/DB_PWD/${db_pass}/g' packer_images/logstash.conf"
 
                                 withEnv(environmentVariables) {
                                         packerBuild {
@@ -165,8 +155,4 @@ def packerBuild(body) {
         }
         print 'Packer build artifact created successfully.'
 
-}
-
-def copyAndReplaceText(source, dest, Closure replaceText){
-        dest.write(replaceText(source.text))
 }
