@@ -6,10 +6,7 @@
     "client_secret": "{{env `ARM_CLIENT_SECRET`}}",
     "resource_group_name": "",
     "ssh_user": "ubuntu",
-    "ssh_pass": "password123!",
-    "db_url": "",
-    "db_user": "",
-    "db_pass": ""
+    "ssh_pass": "password123!"
   },
   "builders": [{
     "type": "azure-arm",
@@ -48,10 +45,7 @@
     {
       "type": "shell",
       "script": "packer_images/install_logstash.sh",
-      "environment_vars": [ "LOGSTASH_VERSION={{user `logstash_version`}}",
-        "DB_URL={{user `db_url`}}",
-        "DB_USER={{user `db_user`}}",
-        "DB_PWD={{user `db_pass`}}"],
+      "environment_vars": [ "LOGSTASH_VERSION={{user `logstash_version`}}"],
       "execute_command": "echo '' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'"
 
     }

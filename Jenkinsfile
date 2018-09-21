@@ -47,10 +47,6 @@ node {
                                 db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE").trim()
                                 echo "retrieved db name: ${db_name}"
                                 db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
-                                environmentVariables.add("DB_URL=$db_url")
-                                environmentVariables.add("DB_USER=$db_user")
-                                environmentVariables.add("DB_PWD=$db_pass")
-
 
                                 sh "sed -i 's|DB_URL|${db_url}|' packer_images/logstash.conf"
                                 sh "sed -i 's|DB_USER|${db_user}|' packer_images/logstash.conf"
@@ -58,13 +54,12 @@ node {
 
                                 sh "cat packer_images/logstash.conf"
 
-                                withEnv(environmentVariables) {
-                                        packerBuild {
-                                                bin = './packer' // optional location of packer install
-                                                template = 'packer_images/logstash.packer.json'
-                                                //var = ["name=value"] // optional variable setting
-                                        }
+                                packerBuild {
+                                        bin = './packer' // optional location of packer install
+                                        template = 'packer_images/logstash.packer.json'
+                                        //var = ["name=value"] // optional variable setting
                                 }
+
                         }
                 }
         }
@@ -139,9 +134,6 @@ def packerBuild(body) {
                         config.var = []
                 }
                 config.var.add("resource_group_name=${productName}-logstash-${environment}")
-                config.var.add("db_url=${env.DB_URL}")
-                config.var.add("db_user=${env.DB_USER}")
-                config.var.add("db_pass=${env.DB_PWD}")
                 config.var.each() {
                         cmd += " -var \'${it}\'"
                 }
