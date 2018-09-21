@@ -51,9 +51,9 @@ node {
                                 environmentVariables.add("DB_USER=$db_user")
                                 environmentVariables.add("DB_PWD=$db_pass")
 
-                                sh "sed -i 's/DB_URL/${db_url}/g' packer_images/logstash.conf"
-                                sh "sed -i 's/DB_USER/${db_user}/g' packer_images/logstash.conf"
-                                sh "sed -i 's/DB_PWD/${db_pass}/g' packer_images/logstash.conf"
+                                sh "sed -i 's|DB_URL|${db_url}/g' packer_images|logstash.conf"
+                                sh "sed -i 's|DB_USER|${db_user}/g' packer_images|logstash.conf"
+                                sh "sed -i 's|DB_PWD|${db_pass}/g' packer_images|logstash.conf"
 
                                 sh "cat packer_images/logstash.conf"
 
