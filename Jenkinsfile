@@ -35,7 +35,6 @@ node {
                         withSubscription('sandbox') {
 
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${productName}-${environment}")
-                                def environmentVariables = []
 
                                 db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST").trim()
                                 echo "retrieved db host: ${db_host}"
