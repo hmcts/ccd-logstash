@@ -14,8 +14,6 @@ else
     apt-get install logstash=$LOGSTASH_VERSION
 fi
 
-# systemctl status logstash
-
 sudo cp logstash.conf /etc/logstash/conf.d
 mv logstash.conf /usr/share/logstash/logstash.conf
 sudo cp log4j2.properties /etc/logstash
