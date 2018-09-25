@@ -45,17 +45,17 @@ node {
                                         }
                                 }
 
-//                                withSubscription('prod') {
-//
-//                                        KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
-//                                        initialiseLogstashConfFile(keyVault)
-//
-//                                        packerBuild {
-//                                                bin = './packer' // optional location of packer install
-//                                                template = 'packer_images/logstash.packer.json'
-//                                                //var = ["name=value"] // optional variable setting
-//                                        }
-//                                }
+                                withSubscription('prod') {
+
+                                        KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
+                                        initialiseLogstashConfFile(keyVault)
+
+                                        packerBuild {
+                                                bin = './packer' // optional location of packer install
+                                                template = 'packer_images/logstash.packer.json'
+                                                //var = ["name=value"] // optional variable setting
+                                        }
+                                }
                         }
                 }
         }
@@ -128,7 +128,7 @@ def packerBuild(body) {
                 if (config.var == null) {
                         config.var = []
                 }
-                config.var.add("resource_group_name=${productName}-logstash-${environment}")
+                config.var.add("resource_group_name=${productName}-logstash-aat-and-prod")
                 config.var.each() {
                         cmd += " -var \'${it}\'"
                 }
