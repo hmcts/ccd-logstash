@@ -38,7 +38,7 @@ node {
                                         KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
                                         initialiseLogstashConfFile(keyVault)
 
-                                        packerBuild {
+                                        packerBuildNonProd {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
                                                 //var = ["name=value"] // optional variable setting
@@ -50,7 +50,7 @@ node {
                                         KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
                                         initialiseLogstashConfFile(keyVault)
 
-                                        packerBuild {
+                                        packerBuildProd {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
                                                 //var = ["name=value"] // optional variable setting
@@ -104,7 +104,7 @@ def download_file(String url, String dest) {
         sh "wget -q -O ${dest} ${url}"
 }
 
-def packerBuild(body) {
+def packerBuildNonProd(body) {
 
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
@@ -128,7 +128,49 @@ def packerBuild(body) {
                 if (config.var == null) {
                         config.var = []
                 }
-                config.var.add("resource_group_name=${productName}-logstash-aat-and-prod")
+                config.var.add("resource_group_name=${productName}-logstash-aat")
+                config.var.each() {
+                        cmd += " -var \'${it}\'"
+                }
+
+                if (config.only != null) {
+                        cmd += " -only=${config.only}"
+                }
+
+                sh "${cmd} ${config.template}"
+        }
+        catch(Exception error) {
+                print 'Failure using packer build.'
+                throw error
+        }
+        print 'Packer build artifact created successfully.'
+}
+
+def packerBuildProd(body) {
+
+        def config = [:]
+        body.resolveStrategy = Closure.DELEGATE_FIRST
+        body.delegate = config
+        body()
+
+        if (config.template == null) {
+                throw new Exception('The required template parameter was not set.')
+        }
+        config.bin = config.bin == null ? 'packer' : config.bin
+        try {
+                cmd = "${config.bin} build -color=false"
+                if (config.var_file != null) {
+                        if (fileExists(config.var_file)) {
+                                cmd += " -var_file=${config.var_file}"
+                        }
+                        else {
+                                throw new Exception("The var file ${config.var_file} does not exist!")
+                        }
+                }
+                if (config.var == null) {
+                        config.var = []
+                }
+                config.var.add("resource_group_name=${productName}-logstash-prod")
                 config.var.each() {
                         cmd += " -var \'${it}\'"
                 }
