@@ -62,8 +62,8 @@ node {
 
         if (params.DEPLOY_LOGSTASH == true) {
 
-                withInfrastructurePipeline(productName, 'nonprod', environment.nonProdName)
-//                withInfrastructurePipeline(productName, 'prod', environment.prodName)
+                withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
+//                withInfrastructurePipeline(productName, environment.prodName, 'prod')
         }
 }
 
