@@ -39,6 +39,11 @@
       "destination": "logstash.conf"
     },
     {
+      "type": "file",
+      "source": "packer_images/log4j2.properties",
+      "destination": "log4j2.properties"
+    },
+    {
       "type": "shell",
       "script": "packer_images/install_java8.sh",
       "execute_command": "echo '' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'"
