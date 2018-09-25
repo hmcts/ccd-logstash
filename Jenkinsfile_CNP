@@ -45,17 +45,17 @@ node {
                                         }
                                 }
 
-                                withSubscription('prod') {
-
-                                        KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
-                                        initialiseLogstashConfFile(keyVault)
-
-                                        packerBuildProd {
-                                                bin = './packer' // optional location of packer install
-                                                template = 'packer_images/logstash.packer.json'
-                                                //var = ["name=value"] // optional variable setting
-                                        }
-                                }
+//                                withSubscription('prod') {
+//
+//                                        KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
+//                                        initialiseLogstashConfFile(keyVault)
+//
+//                                        packerBuildProd {
+//                                                bin = './packer' // optional location of packer install
+//                                                template = 'packer_images/logstash.packer.json'
+//                                                //var = ["name=value"] // optional variable setting
+//                                        }
+//                                }
                         }
                 }
         }
