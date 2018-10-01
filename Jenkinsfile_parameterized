@@ -106,6 +106,7 @@ def download_file(String url, String dest) {
 }
 
 def packerBuild(body) {
+        echo "packer build - product: ${productName}"
 
         def config = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
