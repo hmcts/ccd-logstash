@@ -34,7 +34,7 @@ node {
                 stage("Packer Build Image - ${environment}") {
                         withSubscription('sandbox') {
 
-                                KeyVault keyVault = new KeyVault(this, 'sandbox', "${productName}-${environment}")
+                                KeyVault keyVault = new KeyVault(this, 'sandbox', "ccd-${environment}")
 
                                 db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST").trim()
                                 echo "retrieved db host: ${db_host}"
