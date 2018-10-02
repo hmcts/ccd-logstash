@@ -34,6 +34,9 @@ node {
                 stage("Terraform pre build - ${productName} ${environment}") {
                         sh 'terraform init'
                         sh 'terraform apply -target=logstash-resourcegroup -input=false -no-color'
+                        sh "terraform apply -auto-approve -var 'common_tags=\"\"' -var 'env=${environment}' -var 'name=${productName}' -var " +
+                                "'subscription=sandbox' -var 'deployment_namespace=${deploymentNamespace}' -var 'product=${productName}' " +
+                                (fileExists("${environment}.tfvars") ? " -var-file=${environment}.tfvars" : "")
                 }
 
                 //fixme remove hardcoded values
