@@ -23,7 +23,7 @@ node {
 
         env.PATH = "$env.PATH:/usr/local/bin"
         if (params.BUILD_LOGSTASH_IMAGE == true) {
-                stage("Packer Install - ${environment}") {
+                stage("Packer Install - ${productName} ${environment}") {
                         packerInstall {
                                 install_path = '.' // optional location to install packer
                                 platform = 'linux_amd64' // platform where packer will be installed
@@ -31,7 +31,7 @@ node {
                         }
                 }
                 //fixme remove hardcoded values
-                stage("Packer Build Image - ${environment}") {
+                stage("Packer Build Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
 
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "ccd-${environment}")
