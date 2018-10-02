@@ -40,7 +40,6 @@ node {
                         }
                 }
 
-                //fixme remove hardcoded values
                 stage("Packer Build Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
 
