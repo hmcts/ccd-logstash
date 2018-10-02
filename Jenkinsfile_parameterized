@@ -31,9 +31,9 @@ node {
                         }
                 }
 
-                stage("Terraform pre build - ${productName} ${environment}") {
+                stage("Build logstash resource group - ${productName} ${environment}") {
                         sh 'terraform init'
-                        sh "terraform apply -auto-approve -var 'common_tags=\"\"' -var 'env=${environment}' -var 'name=${productName}' -var " +
+                        sh "terraform apply -auto-approve -var 'common_tags=[]' -var 'env=${environment}' -var 'name=${productName}' -var " +
                                 "'subscription=sandbox' -var 'product=${productName}' " +
                                 (fileExists("${environment}.tfvars") ? " -var-file=${environment}.tfvars" : "")
                 }
