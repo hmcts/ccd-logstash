@@ -31,8 +31,9 @@ node {
                         }
                 }
 
-                stage("Terraform Pre Build - ${productName} ${environment}") {
-                        sh 'terraform apply -target=logstash-resourcegroup'
+                stage("Terraform pre build - ${productName} ${environment}") {
+                        sh 'terraform init'
+                        sh 'terraform apply -target=logstash-resourcegroup -no-color'
                 }
 
                 //fixme remove hardcoded values
