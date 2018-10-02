@@ -32,10 +32,12 @@ node {
                 }
 
                 stage("Create logstash resource group - ${productName} ${environment}") {
-                        sh 'terraform init'
-                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment}' -var 'name=${productName}' -var " +
-                                "'subscription=sandbox' -var 'product=${productName}' " +
-                                (fileExists("${environment}.tfvars") ? " -var-file=${environment}.tfvars" : "")
+                        withInfrastructurePipeline(productName, environment, 'sandbox') {
+                                sh 'terraform init'
+                                sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment}' -var 'name=${productName}' -var " +
+                                        "'subscription=sandbox' -var 'product=${productName}' " +
+                                        (fileExists("${environment}.tfvars") ? " -var-file=${environment}.tfvars" : "")
+                        }
                 }
 
                 //fixme remove hardcoded values
