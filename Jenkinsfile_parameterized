@@ -35,7 +35,7 @@ node {
                         withSubscription('sandbox') {
                                         sh 'terraform init'
                                         sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment}' -var 'name=${productName}' -var " +
-                                                "'subscription=sandbox' -var 'product=${productName}' -target=logstash-resourcegroup" +
+                                                "'subscription=sandbox' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
                                                 (fileExists("${environment}.tfvars") ? " -var-file=${environment}.tfvars" : "")
                         }
                 }
