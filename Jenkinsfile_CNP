@@ -31,11 +31,22 @@ node {
                         }
                 }
 
-                stage("Packer Build Image") {
+                stage("Create Logstash resource group - ${productName}") {
+                        onMaster {
+                                withSubscription('nonprod') {
+                                        sh 'terraform init'
+                                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.nonProdName}' -var 'name=${productName}' -var " +
+                                                "'subscription=nonprod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
+                                                (fileExists("${environment.nonProdName}.tfvars") ? " -var-file=${environment.nonProdName}.tfvars" : "")
+                                }
+                        }
+                }
+
+                stage("Packer Build Logstash Image - ${productName}") {
                         onMaster {
                                 withSubscription('nonprod') {
 
-                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
+                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "ccd-${environment.nonProdName}")
                                         initialiseLogstashConfFile(keyVault)
 
                                         packerBuildNonProd {
@@ -129,6 +140,7 @@ def packerBuildNonProd(body) {
                         config.var = []
                 }
                 config.var.add("resource_group_name=${productName}-logstash-aat")
+                config.var.add("product=${productName}")
                 config.var.each() {
                         cmd += " -var \'${it}\'"
                 }
@@ -171,6 +183,7 @@ def packerBuildProd(body) {
                         config.var = []
                 }
                 config.var.add("resource_group_name=${productName}-logstash-prod")
+                config.var.add("product=${productName}")
                 config.var.each() {
                         cmd += " -var \'${it}\'"
                 }
@@ -202,9 +215,9 @@ def initialiseLogstashConfFile(KeyVault keyVault) {
         echo "retrieved db name: ${db_name}"
         db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
 
-        sh "sed -i 's|DB_URL|${db_url}|' packer_images/logstash.conf"
-        sh "sed -i 's|DB_USER|${db_user}|' packer_images/logstash.conf"
-        sh "sed -i 's|DB_PWD|${db_pass}|' packer_images/logstash.conf"
+        sh "sed -i 's|DB_URL|${db_url}|' packer_images/${productName}_logstash.conf"
+        sh "sed -i 's|DB_USER|${db_user}|' packer_images/${productName}_logstash.conf"
+        sh "sed -i 's|DB_PWD|${db_pass}|' packer_images/${productName}_logstash.conf"
 
-        sh "cat packer_images/logstash.conf"
+        sh "cat packer_images/${productName}_logstash.conf"
 }

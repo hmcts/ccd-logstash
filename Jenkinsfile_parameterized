@@ -23,7 +23,7 @@ node {
 
         env.PATH = "$env.PATH:/usr/local/bin"
         if (params.BUILD_LOGSTASH_IMAGE == true) {
-                stage("Packer Install - ${productName} ${environment}") {
+                stage("Packer Install - ${environment}") {
                         packerInstall {
                                 install_path = '.' // optional location to install packer
                                 platform = 'linux_amd64' // platform where packer will be installed
@@ -31,7 +31,7 @@ node {
                         }
                 }
 
-                stage("Create logstash resource group - ${productName} ${environment}") {
+                stage("Create Logstash resource group - ${productName} ${environment}") {
                         withSubscription('sandbox') {
                                         sh 'terraform init'
                                         sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment}' -var 'name=${productName}' -var " +
@@ -40,27 +40,12 @@ node {
                         }
                 }
 
-                stage("Packer Build Image - ${productName} ${environment}") {
+                stage("Packer Build Logstash Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
 
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "ccd-${environment}")
 
-                                db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST").trim()
-                                echo "retrieved db host: ${db_host}"
-                                db_port = keyVault.find("ccd-data-store-api-POSTGRES-PORT").trim()
-                                echo "retrieved db port: ${db_port}"
-                                db_pass = keyVault.find("ccd-data-store-api-POSTGRES-PASS").trim()
-                                db_user = keyVault.find("ccd-data-store-api-POSTGRES-USER").trim()
-                                echo "retrieved db user: ${db_user}"
-                                db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE").trim()
-                                echo "retrieved db name: ${db_name}"
-                                db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
-
-                                sh "sed -i 's|DB_URL|${db_url}|' packer_images/${productName}_logstash.conf"
-                                sh "sed -i 's|DB_USER|${db_user}|' packer_images/${productName}_logstash.conf"
-                                sh "sed -i 's|DB_PWD|${db_pass}|' packer_images/${productName}_logstash.conf"
-
-                                sh "cat packer_images/${productName}_logstash.conf"
+                                initialiseLogstashConfFile(keyVault)
 
                                 packerBuild {
                                         bin = './packer' // optional location of packer install
@@ -155,4 +140,24 @@ def packerBuild(body) {
         }
         print 'Packer build artifact created successfully.'
 
+}
+
+def initialiseLogstashConfFile(KeyVault keyVault) {
+
+        db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST").trim()
+        echo "retrieved db host: ${db_host}"
+        db_port = keyVault.find("ccd-data-store-api-POSTGRES-PORT").trim()
+        echo "retrieved db port: ${db_port}"
+        db_pass = keyVault.find("ccd-data-store-api-POSTGRES-PASS").trim()
+        db_user = keyVault.find("ccd-data-store-api-POSTGRES-USER").trim()
+        echo "retrieved db user: ${db_user}"
+        db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE").trim()
+        echo "retrieved db name: ${db_name}"
+        db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
+
+        sh "sed -i 's|DB_URL|${db_url}|' packer_images/${productName}_logstash.conf"
+        sh "sed -i 's|DB_USER|${db_user}|' packer_images/${productName}_logstash.conf"
+        sh "sed -i 's|DB_PWD|${db_pass}|' packer_images/${productName}_logstash.conf"
+
+        sh "cat packer_images/${productName}_logstash.conf"
 }
