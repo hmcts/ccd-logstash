@@ -14,7 +14,7 @@ echo debconf shared/accepted-oracle-license-v1-1 seen true | \
 sudo debconf-set-selections
 
 # Install Java 8.
-sudo apt-get -y install oracle-java8-installer
+sudo apt-get -y install oracle-java8-installer oracle-java8-set-default
 
 cd /var/lib/dpkg/info
 sudo sed -i 's|JAVA_VERSION=8u171|JAVA_VERSION=8u181|' oracle-java8-installer.*
