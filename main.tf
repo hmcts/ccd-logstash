@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "logstash-resourcegroup" {
 }
 
 module "logstash" {
-  source = "git@github.com:hmcts/cnp-module-logstash.git?ref=master"
+  source = "git@github.com:hmcts/cnp-module-logstash.git?ref=RDM-3188"
   product = "${var.product}"
   location = "${var.location}"
   env = "${var.env}"
