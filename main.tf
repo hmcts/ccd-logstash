@@ -12,6 +12,7 @@ module "logstash" {
   product = "${var.product}"
   location = "${var.location}"
   env = "${var.env}"
+  subscription = "${var.subscription}"
   common_tags = "${var.common_tags}"
   target_elastic_search_product = "ccd"
 }
