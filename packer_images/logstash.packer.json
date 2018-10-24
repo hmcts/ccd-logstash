@@ -6,9 +6,7 @@
     "client_secret": "{{env `ARM_CLIENT_SECRET`}}",
     "product": "",
     "resource_group_name": "",
-    "ssh_user": "ubuntu",
-    "ssh_pass": "password123!",
-    "logstash_version": "1:6.3.0-1"
+    "logstash_version": "1:6.4.2-1"
   },
   "builders": [{
     "type": "azure-arm",
@@ -19,9 +17,6 @@
 
     "managed_image_resource_group_name": "{{user `resource_group_name`}}",
     "managed_image_name": "logstash-image-{{isotime \"2006-01-02T030405\"}}",
-
-    "ssh_username": "{{user `ssh_user`}}",
-    "ssh_password": "{{user `ssh_pass`}}",
 
     "os_type": "Linux",
     "image_publisher": "Canonical",
