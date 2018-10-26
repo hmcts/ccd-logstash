@@ -15,4 +15,6 @@ module "logstash" {
   subscription = "${var.subscription}"
   common_tags = "${var.common_tags}"
   target_elastic_search_product = "ccd"
+  vm_size = "${var.vm_size}"
+  vm_disk_type = "${var.vm_disk_type}}"
 }

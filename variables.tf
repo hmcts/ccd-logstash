@@ -22,3 +22,14 @@ variable "capacity" {
 variable "common_tags" {
   type = "map"
 }
+
+variable "vm_size" {
+  type = "string"
+  default = "Standard_A2"
+}
+
+variable "vm_disk_type" {
+  type = "string"
+  default = "Standard_LRS"
+}
+
