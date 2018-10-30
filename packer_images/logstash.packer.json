@@ -36,7 +36,7 @@
     },
     {
       "type": "file",
-      "source": "packer_images/{{user `product`}}_logstash.yml",
+      "source": "packer_images/logstash.yml",
       "destination": "logstash.yml"
     },
     {
