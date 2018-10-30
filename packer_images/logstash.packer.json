@@ -36,6 +36,11 @@
     },
     {
       "type": "file",
+      "source": "packer_images/dead_letter_pipeline.conf",
+      "destination": "dead_letter_pipeline.conf"
+    },
+    {
+      "type": "file",
       "source": "packer_images/logstash.yml",
       "destination": "logstash.yml"
     },

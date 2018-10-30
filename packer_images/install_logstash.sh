@@ -16,6 +16,7 @@ fi
 
 sudo cp logstash.conf /etc/logstash/conf.d
 mv logstash.conf /usr/share/logstash/logstash.conf
+sudo cp dead_letter_pipeline.conf /usr/share/logstash
 sudo cp log4j2.properties /etc/logstash
 sudo cp logstash.yml /etc/logstash
 
