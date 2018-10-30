@@ -17,6 +17,7 @@ fi
 sudo cp logstash.conf /etc/logstash/conf.d
 mv logstash.conf /usr/share/logstash/logstash.conf
 sudo cp log4j2.properties /etc/logstash
+sudo cp logstash.yml /etc/logstash
 
 wget -q https://jdbc.postgresql.org/download/postgresql-42.2.2.jar
 mv postgresql-42.2.2.jar /usr/share/logstash/postgresql-42.2.2.jar

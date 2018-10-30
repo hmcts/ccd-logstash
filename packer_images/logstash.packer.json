@@ -36,6 +36,11 @@
     },
     {
       "type": "file",
+      "source": "packer_images/logstash.yml",
+      "destination": "logstash.yml"
+    },
+    {
+      "type": "file",
       "source": "packer_images/log4j2.properties",
       "destination": "log4j2.properties"
     },
