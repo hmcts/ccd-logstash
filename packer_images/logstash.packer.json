@@ -38,6 +38,10 @@
       "type": "file",
       "source": "packer_images/dead_letter_pipeline.conf",
       "destination": "dead_letter_pipeline.conf"
+    },{
+      "type": "file",
+      "source": "packer_images/dead_letter_indexing_pipeline.conf",
+      "destination": "dead_letter_indexing_pipeline.conf"
     },
     {
       "type": "file",
