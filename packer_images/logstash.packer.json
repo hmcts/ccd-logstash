@@ -50,6 +50,11 @@
     },
     {
       "type": "file",
+      "source": "packer_images/pipelines.yml",
+      "destination": "pipelines.yml"
+    },
+    {
+      "type": "file",
       "source": "packer_images/log4j2.properties",
       "destination": "log4j2.properties"
     },

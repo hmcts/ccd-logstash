@@ -20,6 +20,7 @@ sudo cp dead_letter_pipeline.conf /usr/share/logstash
 sudo cp dead_letter_indexing_pipeline.conf /usr/share/logstash
 sudo cp log4j2.properties /etc/logstash
 sudo cp logstash.yml /etc/logstash
+sudo cp pipelines.yml /etc/logstash
 
 wget -q https://jdbc.postgresql.org/download/postgresql-42.2.2.jar
 mv postgresql-42.2.2.jar /usr/share/logstash/postgresql-42.2.2.jar
