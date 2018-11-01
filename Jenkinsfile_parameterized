@@ -45,7 +45,7 @@ node {
 
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "ccd-${environment}")
 
-                                initialiseLogstashConfFile(keyVault)
+                                initialiseLogstashConfFiles(keyVault)
 
                                 packerBuild {
                                         bin = './packer' // optional location of packer install
@@ -142,7 +142,7 @@ def packerBuild(body) {
 
 }
 
-def initialiseLogstashConfFile(KeyVault keyVault) {
+def initialiseLogstashConfFiles(KeyVault keyVault) {
 
         db_host = keyVault.find("ccd-data-store-api-POSTGRES-HOST").trim()
         echo "retrieved db host: ${db_host}"
@@ -164,4 +164,10 @@ def initialiseLogstashConfFile(KeyVault keyVault) {
         sh "sed -i 's|ES_URL|${es_url}|' packer_images/${productName}_logstash.conf"
 
         sh "cat packer_images/${productName}_logstash.conf"
+
+        sh "sed -i 's|ES_URL|${es_url}|' packer_images/logstash.yml"
+        sh "cat packer_images/logstash.yml"
+
+        sh "sed -i 's|ES_URL|${es_url}|' packer_images/dead_letter_indexing_pipeline.conf"
+        sh "cat packer_images/dead_letter_indexing_pipeline.conf"
 }
