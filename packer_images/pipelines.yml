@@ -5,6 +5,7 @@
 - pipeline.id: main
   path.config: "/etc/logstash/conf.d/*.conf"
   pipeline.workers: 3
+  queue.type: persisted
 - pipeline.id: index-dead-letter-to-es
   path.config: "/usr/share/logstash/dead_letter_indexing_pipeline.conf"
   pipeline.workers: 1
