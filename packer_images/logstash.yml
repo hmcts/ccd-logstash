@@ -219,7 +219,7 @@ path.logs: /var/log/logstash
 xpack.monitoring.enabled: true
 #xpack.monitoring.elasticsearch.username: logstash_system
 #xpack.monitoring.elasticsearch.password: password
-xpack.monitoring.elasticsearch.url: ["ES_URL:9200"]
+xpack.monitoring.elasticsearch.url: [ES_DATA_NODES_URL]
 #xpack.monitoring.elasticsearch.ssl.ca: [ "/path/to/ca.crt" ]
 #xpack.monitoring.elasticsearch.ssl.truststore.path: path/to/file
 #xpack.monitoring.elasticsearch.ssl.truststore.password: password
