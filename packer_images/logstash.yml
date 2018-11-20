@@ -204,7 +204,7 @@ dead_letter_queue.max_bytes: 1024mb
 #   * debug
 #   * trace
 #
-# log.level: info
+log.level: warn
 path.logs: /var/log/logstash
 #
 # ------------ Other Settings --------------
