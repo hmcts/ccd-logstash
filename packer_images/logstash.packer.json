@@ -59,6 +59,11 @@
       "destination": "log4j2.properties"
     },
     {
+      "type": "file",
+      "source": "packer_images/jvm.options",
+      "destination": "jvm.options"
+    },
+    {
       "type": "shell",
       "script": "packer_images/install_java8.sh",
       "execute_command": "echo '' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'"
