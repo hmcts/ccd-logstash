@@ -19,6 +19,7 @@ mv logstash.conf /usr/share/logstash/logstash.conf
 sudo cp dead_letter_pipeline.conf /usr/share/logstash
 sudo cp dead_letter_indexing_pipeline.conf /usr/share/logstash
 sudo cp log4j2.properties /etc/logstash
+sudo cp jvm.options /etc/logstash
 sudo cp logstash.yml /etc/logstash
 sudo cp pipelines.yml /etc/logstash
 
