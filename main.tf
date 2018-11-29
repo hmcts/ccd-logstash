@@ -40,6 +40,7 @@ module "logstash" {
   vm_disk_type = "${var.vm_disk_type}"
   target_elastic_search_product = "ccd"
   ssh_elastic_search_public_key = "${data.azurerm_key_vault_secret.ccd_elastic_search_public_key.value}"
+  mgmt_subscription_id = "${var.mgmt_subscription_id}"
 }
 
 
