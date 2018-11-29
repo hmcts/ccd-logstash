@@ -2,6 +2,7 @@
 @Library("Infrastructure") _
 
 import uk.gov.hmcts.contino.azure.KeyVault
+import uk.gov.hmcts.contino.HealthChecker
 
 properties([
         parameters([
@@ -59,6 +60,7 @@ node {
 
         if (params.DEPLOY_LOGSTASH == true) {
                 withInfrastructurePipeline(productName, environment, 'sandbox')
+                healthCheckStage(environment)
         }
 }
 
@@ -170,4 +172,16 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
 
         sh "sed -i 's|ES_DATA_NODES_URL|${es_url}|' packer_images/dead_letter_indexing_pipeline.conf"
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
+}
+
+def healthCheckStage(environmentName) {
+        stage('HealthCheck') {
+                def healthChecker = new HealthChecker(this)
+                healthChecker.check(healthCheckUrl(environmentName), 10, 40)
+        }
+}
+
+def healthCheckUrl(environmentName) {
+        ls_url = "ccd-logstash-${environmentName}.service.core-compute-${environmentName}.internal"
+        "http://" + ls_url + ":9600"
 }
