@@ -60,7 +60,7 @@
     },
     {
       "type": "file",
-      "source": "packer_images/jvm.options",
+      "source": "packer_images/{{user `product`}}_jvm.options",
       "destination": "jvm.options"
     },
     {
