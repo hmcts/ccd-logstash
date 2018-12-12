@@ -68,7 +68,7 @@ node {
 
                                 withSubscription('prod') {
 
-                                        KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
+                                        KeyVault keyVault = new KeyVault(this, 'prod', "ccd-${environment.prodName}")
                                         initialiseLogstashConfFile(keyVault)
 
                                         packerBuildProd {
