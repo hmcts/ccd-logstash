@@ -62,22 +62,22 @@ node {
 
                 stage("Packer Build Logstash Image - ${productName}") {
                         onMaster {
-                                withSubscription('nonprod') {
-
-                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "ccd-${environment.nonProdName}")
-                                        initialiseLogstashConfFiles(keyVault)
-
-                                        packerBuildNonProd {
-                                                bin = './packer' // optional location of packer install
-                                                template = 'packer_images/logstash.packer.json'
-                                                //var = ["name=value"] // optional variable setting
-                                        }
-                                }
+//                                withSubscription('nonprod') {
+//
+//                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "ccd-${environment.nonProdName}")
+//                                        initialiseLogstashConfFiles(keyVault)
+//
+//                                        packerBuildNonProd {
+//                                                bin = './packer' // optional location of packer install
+//                                                template = 'packer_images/logstash.packer.json'
+//                                                //var = ["name=value"] // optional variable setting
+//                                        }
+//                                }
 
                                 withSubscription('prod') {
 
                                         KeyVault keyVault = new KeyVault(this, 'prod', "ccd-${environment.prodName}")
-                                        initialiseLogstashConfFile(keyVault)
+                                        initialiseLogstashConfFiles(keyVault)
 
                                         packerBuildProd {
                                                 bin = './packer' // optional location of packer install
