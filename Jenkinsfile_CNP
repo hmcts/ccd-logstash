@@ -306,7 +306,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
         sh "cp packer_images/${productName}_logstash.conf.in packer_images/${productName}_logstash.conf"
         sh "sed -i 's|DB_URL|${db_url}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|DB_USER|${db_user}|' packer_images/${productName}_logstash.conf"
-        sh "sed -i 's|DB_PWD|${db_pass}|' packer_images/${productName}_logstash.conf"
+        sh "sed -i 's/DB_PWD/`echo ${db_pass} | sed 's/&/\\&/'``/g' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|ES_DATA_NODES_URL|${es_url}|' packer_images/${productName}_logstash.conf"
 
         sh "cat packer_images/${productName}_logstash.conf"
