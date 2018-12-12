@@ -40,6 +40,14 @@ node {
                                                 "'subscription=nonprod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
                                                 (fileExists("${environment.nonProdName}.tfvars") ? " -var-file=${environment.nonProdName}.tfvars" : "")
                                 }
+
+                                withSubscription('prod') {
+                                        sh 'terraform init'
+                                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.prodName}' -var 'name=${productName}' " +
+                                                "-var " +
+                                                "'subscription=prod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
+                                                (fileExists("${environment.prodName}.tfvars") ? " -var-file=${environment.prodName}.tfvars" : "")
+                                }
                         }
 
                         onDemo {
