@@ -28,7 +28,7 @@ node {
                         packerInstall {
                                 install_path = '.' // optional location to install packer
                                 platform = 'linux_amd64' // platform where packer will be installed
-                                version = '1.3.3' // version of packer to install
+                                version = '1.1.3' // version of packer to install
                         }
                 }
 
@@ -150,7 +150,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
         echo "retrieved db host: ${db_host}"
         db_port = keyVault.find("ccd-data-store-api-POSTGRES-PORT").trim()
         echo "retrieved db port: ${db_port}"
-        db_pass = keyVault.find("ccd-data-store-api-POSTGRES-PASS").trim()
+        db_pass = keyVault.find("ccd-data-store-api-POSTGRES-PASS").trim().replaceAll('&', '\\\\&')
         db_user = keyVault.find("ccd-data-store-api-POSTGRES-USER").trim()
         echo "retrieved db user: ${db_user}"
         db_name = keyVault.find("ccd-data-store-api-POSTGRES-DATABASE").trim()
@@ -160,6 +160,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
         es_url = keyVault.find("ccd-ELASTIC-SEARCH-DATA-NODES-URL").trim()
         echo "retrieved ES URL: ${es_url}"
 
+        sh "cp packer_images/${productName}_logstash.conf.in packer_images/${productName}_logstash.conf"
         sh "sed -i 's|DB_URL|${db_url}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|DB_USER|${db_user}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|DB_PWD|${db_pass}|' packer_images/${productName}_logstash.conf"
@@ -167,9 +168,11 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
 
         sh "cat packer_images/${productName}_logstash.conf"
 
+        sh "cp packer_images/logstash.yml.in packer_images/logstash.yml"
         sh "sed -i 's|ES_DATA_NODES_URL|${es_url}|' packer_images/logstash.yml"
         sh "cat packer_images/logstash.yml"
 
+        sh "cp packer_images/dead_letter_indexing_pipeline.conf.in packer_images/dead_letter_indexing_pipeline.conf"
         sh "sed -i 's|ES_DATA_NODES_URL|${es_url}|' packer_images/dead_letter_indexing_pipeline.conf"
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
 }
