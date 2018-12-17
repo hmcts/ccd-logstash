@@ -1,3 +1,7 @@
+provider "azurerm" {
+  version = "1.19.0"
+}
+
 resource "azurerm_resource_group" "logstash-resourcegroup" {
   name     = "${var.product}-logstash-${var.env}"
   location = "${var.location}"
