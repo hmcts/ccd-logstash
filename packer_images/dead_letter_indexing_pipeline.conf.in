@@ -31,7 +31,7 @@ filter {
 
 output {
   elasticsearch {
-    hosts => [ES_DATA_NODES_URL]
+    hosts => [${ES_DATA_NODES_URL}]
     sniffing => false
     index => ".logstash_dead_letter"
   }
