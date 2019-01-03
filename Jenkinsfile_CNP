@@ -118,6 +118,8 @@ node {
                         healthCheckStage(environment.demoName)
                 }
         }
+
+        enableDockerBuild()
 }
 
 def packerInstall(body) {
