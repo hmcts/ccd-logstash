@@ -10,7 +10,7 @@ filter{
 
 output {
     elasticsearch {
-			hosts => [${ES_DATA_NODES_URL}]
+			hosts => ["${ES_DATA_NODES_URL}"]
 			sniffing => false
 			index => "%{[index_id]}"
 			document_type => "_doc"
