@@ -28,6 +28,7 @@ mv postgresql-42.2.2.jar /usr/share/logstash/postgresql-42.2.2.jar
 sudo chmod 777 /usr/share/logstash/data
 
 sudo /usr/share/logstash/bin/logstash-plugin install logstash-filter-prune
+sudo /usr/share/logstash/bin/logstash-plugin install logstash-filter-json_encode
 
 # start Logstash as a service
 systemctl daemon-reload
