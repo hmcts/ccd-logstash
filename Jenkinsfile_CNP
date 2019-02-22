@@ -8,14 +8,12 @@ import uk.gov.hmcts.contino.HealthChecker
 properties([
         parameters([
                 choice(name: 'PRODUCT_NAME', choices: 'probate\nccd', description: 'product name like probate,ccd, div.'),
-                choice(name: 'DATA_BASE_NAME', choices: 'probatemandb\nccd-data-store-api', description: 'DB to which logstash attached (to read keys from valut)'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
         ])
 ])
 
 productName = params.PRODUCT_NAME
-dataBasetName = params.DATA_BASE_NAME
 Environment environment = new Environment(env)
 
 node {
@@ -64,17 +62,17 @@ node {
 
                 stage("Packer Build Logstash Image - ${productName}") {
                         onMaster {
-                        //        withSubscription('nonprod') {
-
-                        //                KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
-                        //                initialiseLogstashConfFiles(keyVault, 'aat')
-
-                        //                packerBuildNonProd {
-                        //                        bin = './packer' // optional location of packer install
-                        //                        template = 'packer_images/logstash.packer.json'
-                        //                        //var = ["name=value"] // optional variable setting
-                        //                }
-                        //        }
+//                                withSubscription('nonprod') {
+//
+//                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
+//                                        initialiseLogstashConfFiles(keyVault, 'aat')
+//
+//                                        packerBuildNonProd {
+//                                                bin = './packer' // optional location of packer install
+//                                                template = 'packer_images/logstash.packer.json'
+//                                                //var = ["name=value"] // optional variable setting
+//                                        }
+//                                }
 
                                 withSubscription('prod') {
 
@@ -92,7 +90,7 @@ node {
                         onDemo {
                                 withSubscription('nonprod') {
 
-                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
+                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.demoName}")
                                         initialiseLogstashConfFiles(keyVault, 'demo')
 
                                         packerBuildDemo {
@@ -107,8 +105,8 @@ node {
 
         if (params.DEPLOY_LOGSTASH == true) {
                 onMaster {
-                //        withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
-                //        healthCheckStage(environment.nonProdName)
+//                        withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
+//                        healthCheckStage(environment.nonProdName)
 
                         withInfrastructurePipeline(productName, environment.prodName, 'prod')
                         healthCheckStage(environment.prodName)
@@ -290,14 +288,19 @@ def packerBuildProd(body) {
 }
 
 def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
-        db_host = keyVault.find("${dataBasetName}-POSTGRES-HOST").trim()
+        def dataBaseName
+        if("${productName}" == "ccd" ) 
+                dataBaseName = "ccd-data-store-api"
+        else if("${productName}" == "probate" )
+                dataBaseName = "probatemandb"
+        db_host = keyVault.find("${dataBaseName}-POSTGRES-HOST").trim()
         echo "retrieved db host: ${db_host}"
-        db_port = keyVault.find("${dataBasetName}-POSTGRES-PORT").trim()
+        db_port = keyVault.find("${dataBaseName}-POSTGRES-PORT").trim()
         echo "retrieved db port: ${db_port}"
-        db_pass = keyVault.find("${dataBasetName}-POSTGRES-PASS").trim().replaceAll('&', '\\\\&')
-        db_user = keyVault.find("${dataBasetName}-POSTGRES-USER").trim()
+        db_pass = keyVault.find("${dataBaseName}-POSTGRES-PASS").trim().replaceAll('&', '\\\\&')
+        db_user = keyVault.find("${dataBaseName}-POSTGRES-USER").trim()
         echo "retrieved db user: ${db_user}"
-        db_name = keyVault.find("${dataBasetName}-POSTGRES-DATABASE").trim()
+        db_name = keyVault.find("${dataBaseName}-POSTGRES-DATABASE").trim()
         echo "retrieved db name: ${db_name}"
         db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
 
@@ -305,7 +308,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
         echo "retrieved ES URL: ${es_url}"
 
         sh "cp packer_images/${productName}_logstash.conf.in packer_images/${productName}_logstash.conf"
-        sh "sed -i 's|\${DB_URL}|${db_url}|' packer_images/${productName}_logstash.conf"   
+        sh "sed -i 's|\${DB_URL}|${db_url}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\${DB_USER}|${db_user}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\${DB_PWD}|${db_pass}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/${productName}_logstash.conf"
@@ -314,13 +317,11 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
 
         sh "cp packer_images/logstash.yml.in packer_images/logstash.yml"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/logstash.yml"
-
         sh "cat packer_images/logstash.yml"
 
         sh "cp packer_images/dead_letter_indexing_pipeline.conf.in packer_images/dead_letter_indexing_pipeline.conf"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/dead_letter_indexing_pipeline.conf"
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
-
 }
 
 def getESUrlFromCCDVault(String env) {
