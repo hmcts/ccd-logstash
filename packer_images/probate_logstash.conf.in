@@ -11,7 +11,7 @@ input {
         use_column_value => true
         tracking_column => last_modified
         tracking_column_type => "timestamp"
-        statement => "SELECT 'CAVEAT' as legacy_case_type, id, caveat_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from caveats_flat where (last_modified > :sql_last_value)"
+        statement => "SELECT 'CAVEAT' as legacy_case_type, id, caveat_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_death2, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from caveats_flat where (last_modified > :sql_last_value)"
         clean_run => false
         last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run"
 
@@ -34,7 +34,7 @@ input {
         use_column_value => true
         tracking_column => last_modified
         tracking_column_type => "timestamp"
-        statement => "SELECT 'STANDING SEARCH' as legacy_case_type, id, ss_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from standing_searches_flat where (last_modified > :sql_last_value)"
+        statement => "SELECT 'STANDING SEARCH' as legacy_case_type, id, ss_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_death2, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from standing_searches_flat where (last_modified > :sql_last_value)"
         clean_run => false
         last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run"
         schedule => "/2 * * * * *"
@@ -53,7 +53,7 @@ input {
         use_column_value => true
         tracking_column => last_modified
         tracking_column_type => "timestamp"
-        statement => "select 'WILL' as legacy_case_type, id, rk_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from wills_flat where (last_modified > :sql_last_value)"
+        statement => "select 'WILL' as legacy_case_type, id, rk_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_death2, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from wills_flat where (last_modified > :sql_last_value)"
         clean_run => false
         last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run"
         schedule => "/2 * * * * *"
@@ -72,7 +72,7 @@ input {
         use_column_value => true
         tracking_column => last_modified
         tracking_column_type => "timestamp"
-        statement => "select 'LEGACY APPLICATION' as legacy_case_type, id, probate_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from grant_applications_flat where (last_modified > :sql_last_value)"
+        statement => "select 'LEGACY APPLICATION' as legacy_case_type, id, probate_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_death2, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from grant_applications_flat where (last_modified > :sql_last_value)"
         clean_run => false
         last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run"
         schedule => "/2 * * * * *"
@@ -91,7 +91,7 @@ input {
         use_column_value => true
         tracking_column => last_modified
         tracking_column_type => "timestamp"
-        statement => "select 'LEGACY GRANT' as legacy_case_type, id, probate_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from grant_applications_derived_flat where (last_modified > :sql_last_value)"
+        statement => "select 'LEGACY GRANT' as legacy_case_type, id, probate_number as record_id, probate_number, deceased_forenames,deceased_surname, alias_names, date_of_death1 as date_of_death, date_of_death2, date_of_birth, last_modified, dnm_ind as imported_to_ccd, ccd_case_no from grant_applications_derived_flat where (last_modified > :sql_last_value)"
         clean_run => false
         last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run"
         schedule => "/2 * * * * *"
@@ -115,6 +115,7 @@ filter{
             "deceased_forenames_classification" => "PUBLIC"
             "deceased_surname_classification" => "PUBLIC"
             "date_of_death_classification" => "PUBLIC"
+            "date_of_death2_classification" => "PUBLIC"
             "date_of_birth_classification" => "PUBLIC"
             "alias_names_classification" => "PUBLIC"
             "record_id_classification" => "PUBLIC"
@@ -134,6 +135,7 @@ filter{
         rename => { "deceased_forenames" => "[data][deceasedForenames]" }
         rename => { "deceased_surname" => "[data][deceasedSurname]" }
         rename => { "date_of_death" => "[data][deceasedDateOfDeath]" }
+        rename => { "date_of_death2" => "[data][deceasedDateOfDeath2]" }
         rename => { "date_of_birth" => "[data][deceasedDateOfBirth]" }
         rename => { "alias_names" => "[data][alias_names]" }
         rename => { "record_id" => "[data][record_id]" }
@@ -146,6 +148,7 @@ filter{
         rename => { "deceased_forenames_classification" => "[data_classification][deceasedForenames]"}
         rename => { "deceased_surname_classification" => "[data_classification][deceasedSurname]"}
         rename => { "date_of_death_classification" => "[data_classification][deceasedDateOfDeath]"}
+        rename => { "date_of_death2_classification" => "[data_classification][deceasedDateOfDeath2]"}
         rename => { "date_of_birth_classification" => "[data_classification][deceasedDateOfBirth]"}
         rename => { "alias_names_classification" => "[data_classification][alias_names]"}
         rename => { "record_id_classification" => "[data_classification][record_id]"}
