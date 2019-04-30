@@ -30,7 +30,7 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
 
 data "azurerm_key_vault_secret" "ccd_elastic_search_public_key" {
   name = "ccd-ELASTIC-SEARCH-PUB-KEY"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }
 
 module "logstash" {
