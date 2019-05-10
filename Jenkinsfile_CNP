@@ -74,7 +74,7 @@ node {
 //                                withSubscription('nonprod') {
 //
 //                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
-//                                        initialiseLogstashConfFiles(keyVault, 'aat')
+//                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'aat')
 //
 //                                        packerBuildNonProd {
 //                                                bin = './packer' // optional location of packer install
@@ -86,7 +86,7 @@ node {
                                 withSubscription('prod') {
 
                                         KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
-                                        initialiseLogstashConfFiles(keyVault, 'prod')
+                                        initialiseLogstashConfFiles(keyVault, 'prod', 'prod')
 
                                         packerBuildProd {
                                                 bin = './packer' // optional location of packer install
@@ -100,7 +100,7 @@ node {
                                 withSubscription('nonprod') {
 
                                         KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.demoName}")
-                                        initialiseLogstashConfFiles(keyVault, 'demo')
+                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'demo')
 
                                         packerBuildDemo {
                                                 bin = './packer' // optional location of packer install
@@ -114,7 +114,7 @@ node {
                                 withSubscription('qa') {
 
                                         KeyVault keyVault = new KeyVault(this, 'qa', "${productName}-${environment.perftestName}")
-                                        initialiseLogstashConfFiles(keyVault, 'perftest')
+                                        initialiseLogstashConfFiles(keyVault, 'qa', 'perftest')
 
                                         packerBuildPerftest {
                                                 bin = './packer' // optional location of packer install
@@ -359,7 +359,7 @@ def packerBuildPerftest(body) {
 
 }
 
-def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
+def initialiseLogstashConfFiles(KeyVault keyVault, String sub, String env) {
         def dataBaseName
         if("${productName}" == "ccd" ) 
                 dataBaseName = "ccd-data-store-api"
@@ -376,7 +376,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
         echo "retrieved db name: ${db_name}"
         db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
 
-        es_url = getESUrlFromCCDVault(env)
+        es_url = getESUrlFromCCDVault(sub, env)
         echo "retrieved ES URL: ${es_url}"
 
         sh "cp packer_images/${productName}_logstash.conf.in packer_images/${productName}_logstash.conf"
@@ -396,13 +396,9 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
 }
 
-def getESUrlFromCCDVault(String env) {
+def getESUrlFromCCDVault(String sub, String env) {
         KeyVault keyVault
-        if(env == 'prod') {
-                keyVault = new KeyVault(this, 'prod', "ccd-${env}")
-        } else {
-                keyVault = new KeyVault(this, 'nonprod', "ccd-${env}")
-        }
+        keyVault = new KeyVault(this, sub, "ccd-${env}")
         return keyVault.find("ccd-ELASTIC-SEARCH-DATA-NODES-URL").trim()
 }
 
