@@ -7,7 +7,7 @@ import uk.gov.hmcts.contino.HealthChecker
 
 properties([
         parameters([
-                choice(name: 'PRODUCT_NAME', choices: 'probate\nccd', description: 'product name like probate,ccd, div.'),
+                choice(name: 'PRODUCT_NAME', choices: 'ccd\nprobate', description: 'product name like probate, ccd, div.'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
         ])
@@ -58,6 +58,15 @@ node {
                                                 (fileExists("${environment.demoName}.tfvars") ? " -var-file=${environment.demoName}.tfvars" : "")
                                 }
                         }
+
+                        onPerftest {
+                                withSubscription('qa') {
+                                        sh 'terraform init'
+                                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.perftestName}' -var 'name=${productName}' -var " +
+                                                "'subscription=nonprod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
+                                                (fileExists("${environment.perftestName}.tfvars") ? " -var-file=${environment.perftestName}.tfvars" : "")
+                                }
+                        }
                 }
 
                 stage("Packer Build Logstash Image - ${productName}") {
@@ -65,7 +74,7 @@ node {
 //                                withSubscription('nonprod') {
 //
 //                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
-//                                        initialiseLogstashConfFiles(keyVault, 'aat')
+//                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'aat')
 //
 //                                        packerBuildNonProd {
 //                                                bin = './packer' // optional location of packer install
@@ -77,7 +86,7 @@ node {
                                 withSubscription('prod') {
 
                                         KeyVault keyVault = new KeyVault(this, 'prod', "${productName}-${environment.prodName}")
-                                        initialiseLogstashConfFiles(keyVault, 'prod')
+                                        initialiseLogstashConfFiles(keyVault, 'prod', 'prod')
 
                                         packerBuildProd {
                                                 bin = './packer' // optional location of packer install
@@ -91,9 +100,23 @@ node {
                                 withSubscription('nonprod') {
 
                                         KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.demoName}")
-                                        initialiseLogstashConfFiles(keyVault, 'demo')
+                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'demo')
 
                                         packerBuildDemo {
+                                                bin = './packer' // optional location of packer install
+                                                template = 'packer_images/logstash.packer.json'
+                                                //var = ["name=value"] // optional variable setting
+                                        }
+                                }
+                        }
+
+                        onPerftest {
+                                withSubscription('qa') {
+
+                                        KeyVault keyVault = new KeyVault(this, 'qa', "${productName}-${environment.perftestName}")
+                                        initialiseLogstashConfFiles(keyVault, 'qa', 'perftest')
+
+                                        packerBuildPerftest {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
                                                 //var = ["name=value"] // optional variable setting
@@ -116,6 +139,11 @@ node {
                 onDemo {
                         withInfrastructurePipeline(productName, environment.demoName, 'nonprod')
                         healthCheckStage(environment.demoName)
+                }
+
+                onPerftest {
+                        withInfrastructurePipeline(productName, environment.perftestName, 'qa')
+                        healthCheckStage(environment.perftestName)
                 }
         }
 }
@@ -287,7 +315,51 @@ def packerBuildProd(body) {
 
 }
 
-def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
+def packerBuildPerftest(body) {
+
+        def config = [:]
+        body.resolveStrategy = Closure.DELEGATE_FIRST
+        body.delegate = config
+        body()
+
+        if (config.template == null) {
+                throw new Exception('The required template parameter was not set.')
+        }
+        config.bin = config.bin == null ? 'packer' : config.bin
+        try {
+                cmd = "${config.bin} build -color=false"
+                if (config.var_file != null) {
+                        if (fileExists(config.var_file)) {
+                                cmd += " -var_file=${config.var_file}"
+                        }
+                        else {
+                                throw new Exception("The var file ${config.var_file} does not exist!")
+                        }
+                }
+                if (config.var == null) {
+                        config.var = []
+                }
+                config.var.add("resource_group_name=${productName}-logstash-perftest")
+                config.var.add("product=${productName}")
+                config.var.each() {
+                        cmd += " -var \'${it}\'"
+                }
+
+                if (config.only != null) {
+                        cmd += " -only=${config.only}"
+                }
+
+                sh "${cmd} ${config.template}"
+        }
+        catch(Exception error) {
+                print 'Failure using packer build.'
+                throw error
+        }
+        print 'Packer build artifact created successfully.'
+
+}
+
+def initialiseLogstashConfFiles(KeyVault keyVault, String sub, String env) {
         def dataBaseName
         if("${productName}" == "ccd" ) 
                 dataBaseName = "ccd-data-store-api"
@@ -304,7 +376,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
         echo "retrieved db name: ${db_name}"
         db_url = "jdbc:postgresql://${db_host}:${db_port}/${db_name}?ssl=true"
 
-        es_url = getESUrlFromCCDVault(env)
+        es_url = getESUrlFromCCDVault(sub, env)
         echo "retrieved ES URL: ${es_url}"
 
         sh "cp packer_images/${productName}_logstash.conf.in packer_images/${productName}_logstash.conf"
@@ -324,13 +396,9 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String env) {
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
 }
 
-def getESUrlFromCCDVault(String env) {
+def getESUrlFromCCDVault(String sub, String env) {
         KeyVault keyVault
-        if(env == 'prod') {
-                keyVault = new KeyVault(this, 'prod', "ccd-${env}")
-        } else {
-                keyVault = new KeyVault(this, 'nonprod', "ccd-${env}")
-        }
+        keyVault = new KeyVault(this, sub, "ccd-${env}")
         return keyVault.find("ccd-ELASTIC-SEARCH-DATA-NODES-URL").trim()
 }
 
