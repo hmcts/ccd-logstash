@@ -63,7 +63,7 @@ node {
                                 withSubscription('qa') {
                                         sh 'terraform init'
                                         sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.perftestName}' -var 'name=${productName}' -var " +
-                                                "'subscription=nonprod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
+                                                "'subscription=qa' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
                                                 (fileExists("${environment.perftestName}.tfvars") ? " -var-file=${environment.perftestName}.tfvars" : "")
                                 }
                         }
