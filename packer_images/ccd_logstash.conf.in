@@ -20,7 +20,7 @@ input {
         statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification from case_data where last_modified > :sql_last_value"
 
     	clean_run => false
-    	last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run"
+    	last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_ccd"
 	    
 	    # every second
         schedule => "* * * * * *"
