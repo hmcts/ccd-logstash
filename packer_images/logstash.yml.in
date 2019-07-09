@@ -161,7 +161,7 @@ path.data: /var/lib/logstash
 # If using queue.type: persisted, the maximum number of written events before forcing a checkpoint
 # Default is 1024, 0 for unlimited
 #
-# queue.checkpoint.writes: 1024
+ queue.checkpoint.writes: 1
 #
 # If using queue.type: persisted, the interval in milliseconds when a checkpoint is forced on the head page
 # Default is 1000, 0 for no periodic checkpoint.
