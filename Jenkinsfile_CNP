@@ -432,7 +432,7 @@ def packerBuildIthc(body) {
 
 def initialiseLogstashConfFiles(KeyVault keyVault, String sub, String env) {
         def dataBaseName
-        if("${productName}" == "ccd" || ${productName}" == "sweeper") 
+        if("${productName}" == "ccd" || "${productName}" == "sweeper") 
                 dataBaseName = "ccd-data-store-api"
         else if("${productName}" == "probate" )
                 dataBaseName = "probatemandb"
