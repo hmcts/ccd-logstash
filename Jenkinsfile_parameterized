@@ -17,6 +17,7 @@ productName = params.PRODUCT_NAME
 environment = params.ENVIRONMENT
 
 node {
+        def vaultName = (productName=="sweeper") ? "ccd" : productName
         stage('Checkout') {
                 deleteDir()
                 checkout scm
@@ -44,7 +45,7 @@ node {
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
 
-                                KeyVault keyVault = new KeyVault(this, 'sandbox', "${productName}-${environment}")
+                                KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
                                 initialiseLogstashConfFiles(keyVault)
 
