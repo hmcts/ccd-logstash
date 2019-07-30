@@ -23,7 +23,7 @@ input {
     	last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_sweeper"
 	    
 	    # every 300 seconds
-        schedule => "/300 * * * * * *"
+        schedule => "0 0/5 0 ? * * *"
 	    # every 2 seconds
         # schedule => "/2 * * * * *"
     }
