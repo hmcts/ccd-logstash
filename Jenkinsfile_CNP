@@ -433,7 +433,7 @@ def packerBuildIthc(body) {
 def initialiseLogstashConfFiles(KeyVault keyVault, String sub, String env) {
         def dataBaseName
         if("${productName}" == "ccd" || "${productName}" == "sweeper") 
-                dataBaseName = "ccd-data-store-api"
+                dataBaseName = "data-store-api"
         else if("${productName}" == "probate" )
                 dataBaseName = "probatemandb"
         db_host = keyVault.find("${dataBaseName}-POSTGRES-HOST").trim()
@@ -480,7 +480,6 @@ def healthCheckStage(environmentName) {
         }
 
 }
-enableDbMigration('ccd')
 
 def healthCheckUrl(environmentName) {
         ls_url = "${productName}-logstash-${environmentName}.service.core-compute-${environmentName}.internal"
