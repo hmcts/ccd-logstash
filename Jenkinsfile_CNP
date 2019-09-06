@@ -478,7 +478,9 @@ def healthCheckStage(environmentName) {
                 def healthChecker = new HealthChecker(this)
                 healthChecker.check(healthCheckUrl(environmentName), 10, 40)
         }
+
 }
+enableDbMigration('ccd')
 
 def healthCheckUrl(environmentName) {
         ls_url = "${productName}-logstash-${environmentName}.service.core-compute-${environmentName}.internal"
