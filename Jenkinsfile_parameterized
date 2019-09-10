@@ -17,7 +17,7 @@ productName = params.PRODUCT_NAME
 environment = params.ENVIRONMENT
 
 node {
-        def vaultName = (productName=="sweeper") ? "ccd" : productName
+        def vaultName = (productName=="sweeper" || productName=="ccdprobate") ? "ccd" : productName
         stage('Checkout') {
                 deleteDir()
                 checkout scm
