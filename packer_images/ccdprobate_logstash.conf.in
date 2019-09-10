@@ -17,13 +17,10 @@ input {
 
         parameters => { 
                         "state" => "Draft"
-                        "divorcej" => "DIVORCE"
-                        "cmcj" => "CMC"
-                        "probatej" => "PROBATE"
-                        "sscsj" => "SSCS" #Although not currently onboarded, future proofing for potential use
+                        "jurisdiction" => "PROBATE"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification from case_data where last_modified >= :sql_last_value AND jurisdiction != :divorcej AND jurisdiction != :cmcj AND jurisdiction != :probatej AND jurisdiction != :sscsj AND STATE != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification from case_data where last_modified >= :sql_last_value AND jurisdiction = :jurisdiction and STATE != :state"
 
     	clean_run => false
     	last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_ccd"
