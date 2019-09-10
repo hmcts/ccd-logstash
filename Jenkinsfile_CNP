@@ -79,7 +79,7 @@ node {
                 }
 
                 stage("Packer Build Logstash Image - ${productName}")
-                 {def vaultName = (productName=="sweeper") || (productName=="ccdprobate") ? "ccd" : productName
+                 {def vaultName = (productName=="sweeper") || (productName=="ccdprobate") || (productName=="ccdcmc") || (productName=="ccddivorce") || (productName=="ccdsscs") ? "ccd" : productName
                         onMaster {
 //                                withSubscription('nonprod') {
 //
