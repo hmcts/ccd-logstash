@@ -68,6 +68,15 @@ node {
                                 }
                         }
 
+                        onEthosldata {
+                                withSubscription('ethosldata') {
+                                        sh 'terraform init'
+                                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.ethosLdataName}' -var 'name=${productName}' -var " +
+                                                "'subscription=ethosldata' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
+                                                (fileExists("${environment.ethosLdataName}.tfvars") ? " -var-file=${environment.ethosLdataName}.tfvars" : "")
+                                }
+                        }
+
                         onIthc {
                                 withSubscription('qa') {
                                         sh 'terraform init'
@@ -133,6 +142,19 @@ node {
                                         }
                                 }
                         }
+                        onEthosldata {
+                                withSubscription('ethosldata') {
+
+                                        KeyVault keyVault = new KeyVault(this, 'ethosldata', "${vaultName}-${environment.ethosLdataName}")
+                                        initialiseLogstashConfFiles(keyVault, 'ethosldata', 'ethosldata')
+
+                                        packerBuildPerftest {
+                                                bin = './packer' // optional location of packer install
+                                                template = 'packer_images/logstash.packer.json'
+                                                //var = ["name=value"] // optional variable setting
+                                        }
+                                }
+                        }
                         onIthc {
                                 withSubscription('qa') {
 
@@ -167,6 +189,10 @@ node {
                 onPerftest {
                         withInfrastructurePipeline(productName, environment.perftestName, 'qa')
                         healthCheckStage(environment.perftestName)
+                }
+                onEthosldata {
+                        withInfrastructurePipeline(productName, environment.ethosLdataName, 'ethosldata')
+                        healthCheckStage(environment.ethosLdataName)
                 }
                 onIthc {
                         withInfrastructurePipeline(productName, environment.ithcName, 'qa')
