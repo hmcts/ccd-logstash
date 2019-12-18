@@ -21,7 +21,7 @@ variable "subscription" {
 }
 
 variable "capacity" {
-  default = "2"
+  default = "1"
 }
 
 variable "common_tags" {
