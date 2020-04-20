@@ -1,0 +1,15 @@
+version: 1.0-preview-1
+steps:
+
+- id: build
+  build: >
+    -t {{.Run.Registry}}/ccd/ccd-logstash:latest -t {{.Run.Registry}}/ccd/ccd-logstash:{{.Run.ID}}
+    .
+  keep: true
+
+- id: push
+  push:
+  - "{{.Run.Registry}}/ccd/ccd-logstash:{{.Run.ID}}"
+  - "{{.Run.Registry}}/ccd/ccd-logstash:latest"
+  when:
+  - build
