@@ -1,11 +1,19 @@
 {
   "variables": {
+    "client_id": "{{env `ARM_CLIENT_ID`}}",
+    "subscription_id": "bf308a5c-0624-4334-8ff8-8dca9fd43783",
+    "tenant_id": "{{env `ARM_TENANT_ID`}}",
+    "client_secret": "{{env `ARM_CLIENT_SECRET`}}",
     "product": "",
     "resource_group_name": "",
     "logstash_version": "1:6.4.2-1"
   },
   "builders": [{
     "type": "azure-arm",
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+    "tenant_id": "{{user `tenant_id`}}",
 
     "managed_image_resource_group_name": "{{user `resource_group_name`}}",
     "managed_image_name": "logstash-image-{{isotime \"2006-01-02T030405\"}}",
