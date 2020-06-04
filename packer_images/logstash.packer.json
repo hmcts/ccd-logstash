@@ -10,6 +10,8 @@
   },
   "builders": [{
     "type": "azure-arm",
+    "subscription_id": "{{user `subscription_id`}}",
+    "tenant_id": "{{user `tenant_id`}}",
 
     "managed_image_resource_group_name": "{{user `resource_group_name`}}",
     "managed_image_name": "logstash-image-{{isotime \"2006-01-02T030405\"}}",
