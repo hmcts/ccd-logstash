@@ -38,5 +38,4 @@ variable "vm_disk_type" {
   default = "Standard_LRS"
 }
 
-variable "mgmt_subscription_id" {}
 
