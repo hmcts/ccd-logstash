@@ -44,6 +44,7 @@ node {
 
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
+                                az "account set --subscription ${env.ARM_SUBSCRIPTION_ID}"
                                 sh label: 'Running change to Sbox sub', script: 'az account set --subscription DCD-CFT-Sandbox'
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
