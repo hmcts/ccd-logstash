@@ -44,7 +44,6 @@ node {
 
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
                         withCredentials([azureServicePrincipal('jenkinsServicePrincipal')]) {
-                                withSubscription('sandbox') {
 
                                         KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
@@ -56,7 +55,6 @@ node {
                                                 //var = ["name=value"] // optional variable setting
                                         }
 
-                                }
                         }
                 }
         }
