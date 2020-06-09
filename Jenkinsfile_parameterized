@@ -18,7 +18,7 @@ environment = params.ENVIRONMENT
 
 node {
         def vaultName = (productName=="sweeper") ? "ccd" : productName
-        def az = { cmd -> return sh(script: "env AZURE_CONFIG_DIR=/opt/jenkins/.azure-$subscription az $cmd", returnStdout: true).trim() }
+        def az = { cmd -> return sh(script: "env AZURE_CONFIG_DIR=/opt/jenkins/.azure-sandbox az $cmd", returnStdout: true).trim() }
         stage('Checkout') {
                 deleteDir()
                 checkout scm
@@ -45,6 +45,9 @@ node {
 
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
+                                withAzureKeyvault([
+                                                        [$class: 'AzureKeyVaultSecret', secretType: 'Secret', name: "sandbox-subscription-id", version: '', envVariable: 'ARM_SUBSCRIPTION_ID']
+                                                  ])
                                 az "account set --subscription ${env.ARM_SUBSCRIPTION_ID}"
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
