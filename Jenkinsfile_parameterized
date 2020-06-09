@@ -18,6 +18,7 @@ environment = params.ENVIRONMENT
 
 node {
         def vaultName = (productName=="sweeper") ? "ccd" : productName
+        def az = { cmd -> return sh(script: "env AZURE_CONFIG_DIR=/opt/jenkins/.azure-$subscription az $cmd", returnStdout: true).trim() }
         stage('Checkout') {
                 deleteDir()
                 checkout scm
@@ -45,7 +46,6 @@ node {
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
                                 az "account set --subscription ${env.ARM_SUBSCRIPTION_ID}"
-                                sh label: 'Running change to Sbox sub', script: 'az account set --subscription DCD-CFT-Sandbox'
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
                                 initialiseLogstashConfFiles(keyVault)
@@ -64,6 +64,7 @@ node {
                 healthCheckStage(environment)
         }
 }
+
 
 def packerInstall(body) {
         // evaluate the body block and collect configuration into the object
