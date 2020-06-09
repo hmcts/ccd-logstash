@@ -43,18 +43,20 @@ node {
                 }
 
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
-                        withSubscriptionSp('sandbox') {
+                        withCredentials([azureServicePrincipal('jenkinsServicePrincipal')]) {
+                                withSubscription('sandbox') {
 
-                                KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
+                                        KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
-                                initialiseLogstashConfFiles(keyVault)
+                                        initialiseLogstashConfFiles(keyVault)
 
-                                packerBuild {
-                                        bin = './packer' // optional location of packer install
-                                        template = 'packer_images/logstash.packer.json'
-                                        //var = ["name=value"] // optional variable setting
+                                        packerBuild {
+                                                bin = './packer' // optional location of packer install
+                                                template = 'packer_images/logstash.packer.json'
+                                                //var = ["name=value"] // optional variable setting
+                                        }
+
                                 }
-
                         }
                 }
         }
