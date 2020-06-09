@@ -47,8 +47,9 @@ node {
                         withSubscription('sandbox') {
                                 withAzureKeyvault([
                                                         [$class: 'AzureKeyVaultSecret', secretType: 'Secret', name: "sandbox-subscription-id", version: '', envVariable: 'ARM_SUBSCRIPTION_ID']
-                                                  ])
+                                                  ]){
                                 az "account set --subscription ${env.ARM_SUBSCRIPTION_ID}"
+                                }
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
                                 initialiseLogstashConfFiles(keyVault)
