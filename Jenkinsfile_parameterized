@@ -18,7 +18,6 @@ environment = params.ENVIRONMENT
 
 node {
         def vaultName = (productName=="sweeper") ? "ccd" : productName
-        def az = { cmd -> return sh(script: "env AZURE_CONFIG_DIR=/opt/jenkins/.azure-sandbox az $cmd", returnStdout: true).trim() }
         stage('Checkout') {
                 deleteDir()
                 checkout scm
@@ -44,12 +43,7 @@ node {
                 }
 
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
-                        withSubscription('sandbox') {
-                                withAzureKeyvault([
-                                                        [$class: 'AzureKeyVaultSecret', secretType: 'Secret', name: "sandbox-subscription-id", version: '', envVariable: 'ARM_SUBSCRIPTION_ID']
-                                                  ]){
-                                az "account set --subscription ${env.ARM_SUBSCRIPTION_ID}"
-                                }
+                        servicePrincipalBasedLogin('sandbox') {
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
                                 initialiseLogstashConfFiles(keyVault)
@@ -202,4 +196,24 @@ def healthCheckStage(environmentName) {
 def healthCheckUrl(environmentName) {
         ls_url = "${productName}-logstash-${environmentName}.service.core-compute-${environmentName}.internal"
         "http://" + ls_url + ":9600"
+}
+
+
+def servicePrincipalBasedLogin(String subscription, Closure body) {
+  ansiColor('xterm') {
+    withCredentials([azureServicePrincipal(
+      credentialsId: "jenkinsServicePrincipal",
+      subscriptionIdVariable: 'JENKINS_SUBSCRIPTION_ID',
+      clientIdVariable: 'JENKINS_CLIENT_ID',
+      clientSecretVariable: 'JENKINS_CLIENT_SECRET',
+      tenantIdVariable: 'JENKINS_TENANT_ID')]) {
+
+      def azJenkins = { cmd -> return sh(label: "az $cmd", script: "env AZURE_CONFIG_DIR=/opt/jenkins/.azure-jenkins az $cmd", returnStdout: true).trim() }
+
+      def az = { cmd -> return sh(label: "az $cmd", script: "env AZURE_CONFIG_DIR=/opt/jenkins/.azure-$subscription az $cmd", returnStdout: true).trim() }
+
+      azJenkins 'login --service-principal -u $JENKINS_CLIENT_ID -p $JENKINS_CLIENT_SECRET -t $JENKINS_TENANT_ID'
+      azJenkins 'account set --subscription $JENKINS_SUBSCRIPTION_ID'
+                }
+        }
 }
