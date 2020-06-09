@@ -43,7 +43,7 @@ node {
                 }
 
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
-                        withSubscription('sandbox') {
+                        withSubscriptionSp('sandbox') {
 
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
