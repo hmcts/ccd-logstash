@@ -3,6 +3,7 @@
 
 import uk.gov.hmcts.contino.azure.KeyVault
 import uk.gov.hmcts.contino.HealthChecker
+import groovy.json.JsonSlurperClassic
 
 properties([
         parameters([
@@ -214,7 +215,7 @@ def servicePrincipalBasedLogin(String subscription, Closure body) {
 
       azJenkins 'login --service-principal -u $JENKINS_CLIENT_ID -p $JENKINS_CLIENT_SECRET -t $JENKINS_TENANT_ID'
       azJenkins 'account set --subscription $JENKINS_SUBSCRIPTION_ID'
-      
+
       def infraVaultName = "infra-vault-$subscription"
       echo "Using " + infraVaultName
 
