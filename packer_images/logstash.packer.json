@@ -1,9 +1,9 @@
 {
   "variables": {
-    "client_id": "f2279271-d0a0-45ed-ac1c-5aff1388ff01",
-    "subscription_id": "bf308a5c-0624-4334-8ff8-8dca9fd43783",
-    "tenant_id": "531ff96d-0ae9-462a-8d2d-bec7c0b42082",
-    "client_secret": "o_9ca00SWlSw..u7c2mXM2_mZhAj~66cR_",
+    "client_id": "{{env `PACKER_AZURE_CLIENT_ID`}}",
+    "subscription_id": "{{env `PACKER_AZURE_SUBSCRIPTION_ID`}}",
+    "tenant_id": "{{env `PACKER_AZURE_TENANT_ID`}}",
+    "client_secret": "{{env `PACKER_AZURE_CLIENT_SECRET`}}",
     "product": "",
     "resource_group_name": "",
     "logstash_version": "1:6.4.2-1"
