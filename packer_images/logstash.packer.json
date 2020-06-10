@@ -6,7 +6,7 @@
     "client_secret": "{{env `PACKER_AZURE_CLIENT_SECRET`}}",
     "product": "",
     "resource_group_name": "",
-    "logstash_version": "1:6.4.2-1"
+    "logstash_version": "1:7.7.1-1"
   },
   "builders": [{
     "type": "azure-arm",
