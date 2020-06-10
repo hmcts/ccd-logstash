@@ -30,7 +30,7 @@ node {
                         packerInstall {
                                 install_path = '.' // optional location to install packer
                                 platform = 'linux_amd64' // platform where packer will be installed
-                                version = '1.5.1' // version of packer to install
+                                version = '1.6.0' // version of packer to install
                         }
                 }
 
@@ -48,7 +48,13 @@ node {
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
                                 initialiseLogstashConfFiles(keyVault)
-                                withAzureKeyvault(azureKeyVaultSecrets: [[envVariable: 'PACKER_AZURE_CLIENT_ID', name: 'subscription-client-id', secretType: 'Secret'], [envVariable: 'PACKER_AZURE_CLIENT_SECRET', name: 'subscription-client-secret', secretType: 'Secret'], [envVariable: 'PACKER_AZURE_TENANT_ID', name: 'subscription-tenant-id', secretType: 'Secret'], [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']], credentialIDOverride: 'jenkins-managed-identity', keyVaultURLOverride: 'https://infra-vault-dev.vault.azure.net/') {
+                                withAzureKeyvault(azureKeyVaultSecrets: [[envVariable: 'PACKER_AZURE_CLIENT_ID', name: 'subscription-client-id', secretType: 'Secret'], 
+                                                                        [envVariable: 'PACKER_AZURE_CLIENT_SECRET', name: 'subscription-client-secret', secretType: 'Secret'], 
+                                                                        [envVariable: 'PACKER_AZURE_TENANT_ID', name: 'subscription-tenant-id', secretType: 'Secret'], 
+                                                                        [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']], 
+                                                                        credentialIDOverride: 'jenkins-managed-identity', 
+                                                                        keyVaultURLOverride: 'https://infra-vault-dev.vault.azure.net/') 
+                                {
                                         packerBuild {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
@@ -187,22 +193,6 @@ def getESUrlFromCCDVault() {
         KeyVault keyVault = new KeyVault(this, 'sandbox', "ccd-${environment}")
         return keyVault.find("ccd-ELASTIC-SEARCH-DATA-NODES-URL").trim()
 }
-
-def getSPCredsForPacker() {
-        KeyVault keyVault = new KeyVault(this, 'sandbox', "infra-vault-dev")
-        temp_azure_client_id = keyVault.find("subscription-client-id").trim()
-        temp_azure_client_secret = keyVault.find("subscription-client-secret").trim()
-        temp_azure_tenant_id = keyVault.find("subscription-tenant-id").trim()
-        temp_azure_subscription_id = keyVault.find("subscription-id").trim()
-
-        echo "=== You are building with $temp_azure_subscription_id subscription credentials ==="
-
-        withEnv(["PACKER_AZURE_CLIENT_ID=${temp_azure_client_id}",
-               "PACKER_AZURE_CLIENT_SECRET=${temp_azure_client_secret}",
-               "PACKER_AZURE_TENANT_ID=${temp_azure_tenant_id}",
-               "PACKER_AZURE_SUBSCRIPTION_ID=${temp_azure_subscription_id}"])
-}
-
 
 
 def healthCheckStage(environmentName) {
