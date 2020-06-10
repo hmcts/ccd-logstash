@@ -188,7 +188,8 @@ def getESUrlFromCCDVault() {
         return keyVault.find("ccd-ELASTIC-SEARCH-DATA-NODES-URL").trim()
 }
 
-def getSPCredsForPacker(KeyVault infra-vault-dev) {
+def getSPCredsForPacker() {
+        KeyVault keyVault = new KeyVault(this, 'sandbox', "infra-vault-dev")
         temp_azure_client_id = keyVault.find("subscription-client-id").trim()
         temp_azure_client_secret = keyVault.find("subscription-client-secret").trim()
         temp_azure_tenant_id = keyVault.find("subscription-tenant-id").trim()
