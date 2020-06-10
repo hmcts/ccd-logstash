@@ -195,6 +195,7 @@ def getSPCredsForPacker() {
         temp_azure_tenant_id = keyVault.find("subscription-tenant-id").trim()
         temp_azure_subscription_id = keyVault.find("subscription-id").trim()
 
+        echo "=== You are building with $temp_azure_subscription_id subscription credentials ==="
 
         withEnv(["PACKER_AZURE_CLIENT_ID=${temp_azure_client_id}",
                "PACKER_AZURE_CLIENT_SECRET=${temp_azure_client_secret}",
