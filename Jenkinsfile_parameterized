@@ -48,13 +48,13 @@ node {
                                 KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
 
                                 initialiseLogstashConfFiles(keyVault)
-                                getSPCredsForPacker()
-                                packerBuild {
-                                        bin = './packer' // optional location of packer install
-                                        template = 'packer_images/logstash.packer.json'
-                                        //var = ["name=value"] // optional variable setting
+                                withAzureKeyvault(azureKeyVaultSecrets: [[envVariable: 'PACKER_AZURE_CLIENT_ID', name: 'subscription-client-id', secretType: 'Secret'], [envVariable: 'PACKER_AZURE_CLIENT_SECRET', name: 'subscription-client-secret', secretType: 'Secret'], [envVariable: 'PACKER_AZURE_TENANT_ID', name: 'subscription-tenant-id', secretType: 'Secret'], [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']], credentialIDOverride: 'jenkinsServicePrincipal', keyVaultURLOverride: 'https://infra-vault-dev.vault.azure.net/') {
+                                        packerBuild {
+                                                bin = './packer' // optional location of packer install
+                                                template = 'packer_images/logstash.packer.json'
+                                                //var = ["name=value"] // optional variable setting
+                                        }
                                 }
-
                         }
                 }
         }
