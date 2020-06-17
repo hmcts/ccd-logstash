@@ -49,12 +49,13 @@ node {
 
                                 initialiseLogstashConfFiles(keyVault)
                                 // packer workaround https://github.com/hashicorp/packer/issues/9140
+                                appKeyVaultUrl = https://${vaultName}-${environment}.vault.azure.net/
                                 withAzureKeyvault(azureKeyVaultSecrets: [[envVariable: 'PACKER_AZURE_CLIENT_ID', name: 'subscription-client-id', secretType: 'Secret'], 
                                                                          [envVariable: 'PACKER_AZURE_CLIENT_SECRET', name: 'subscription-client-secret', secretType: 'Secret'], 
                                                                          [envVariable: 'PACKER_AZURE_TENANT_ID', name: 'subscription-tenant-id', secretType: 'Secret'], 
                                                                          [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']], 
                                                                         credentialIDOverride: 'jenkins-managed-identity', 
-                                                                        keyVaultURLOverride: $keyVault) 
+                                                                        keyVaultURLOverride: $appKeyVaultUrl) 
                                 {
                                         packerBuild {
                                                 bin = './packer' // optional location of packer install
