@@ -46,9 +46,9 @@ filter{
 		remove_field => ["json_data_classification"]
 	}
 	json{
-    		source => "json_supplementary_data"
-    		target => "supplementary_data"
-    		remove_field => ["json_supplementary_data"]
+    	source => "json_supplementary_data"
+    	target => "supplementary_data"
+    	remove_field => ["json_supplementary_data"]
     }
 	# mutate { remove_field => [ "@timestamp", "@version" ] }
 	mutate {
