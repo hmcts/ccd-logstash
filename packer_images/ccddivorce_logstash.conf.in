@@ -11,7 +11,7 @@ input {
         jdbc_page_size => "20000"
         jdbc_default_timezone => "UTC"
 
-        // keep this as false to ensure that sql_last_value can be used for both last_modified and supplementary_data_last_modified
+        # keep this as false to ensure that sql_last_value can be used for both last_modified and supplementary_data_last_modified
         use_column_value => false
 
         parameters => { 
