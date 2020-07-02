@@ -69,7 +69,7 @@ node {
                         }
 
                         onEthosldata {
-                                withSubscription('ethosldata') {
+                                withSubscriptionSp('ethosldata') {
                                         sh 'terraform init'
                                         sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.ethosLdataName}' -var 'name=${productName}' -var " +
                                                 "'subscription=ethosldata' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
