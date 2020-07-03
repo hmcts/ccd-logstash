@@ -34,7 +34,7 @@ data "azurerm_key_vault_secret" "ccd_elastic_search_public_key" {
 }
 
 module "logstash" {
-  source = "git@github.com:hmcts/cnp-module-logstash.git?ref=master"
+  source = "git@github.com:hmcts/cnp-module-logstash.git?ref=jenkins-beta-update"
   product = "${var.product}"
   location = "${var.location}"
   env = "${var.env}"
