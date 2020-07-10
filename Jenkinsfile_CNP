@@ -48,7 +48,7 @@ node {
 //                                                "'subscription=prod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
 //                                                (fileExists("${environment.prodName}.tfvars") ? " -var-file=${environment.prodName}.tfvars" : "")
 //                                }
-//                        }
+                        }
 
                         onDemo {
                                 withSubscription('nonprod') {
@@ -104,7 +104,7 @@ node {
 //                                                //var = ["name=value"] // optional variable setting
 //                                        }
 //                                }
-//                        }
+                        }
 
                         onDemo {
                                 withSubscription('nonprod') {
