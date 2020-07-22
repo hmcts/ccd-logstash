@@ -111,13 +111,15 @@ node {
                                         KeyVault keyVault = new KeyVault(this, 'nonprod', "${vaultName}-${environment.demoName}")
                                         initialiseLogstashConfFiles(keyVault, 'nonprod', 'demo')
                                         // packer workaround https://github.com/hashicorp/packer/issues/9140
+                                        echo "step 1"
                                         withAzureKeyvault(azureKeyVaultSecrets: [[envVariable: 'PACKER_AZURE_CLIENT_ID', name: 'subscription-client-id', secretType: 'Secret'], 
                                                                                 [envVariable: 'PACKER_AZURE_CLIENT_SECRET', name: 'subscription-client-secret', secretType: 'Secret'], 
                                                                                 [envVariable: 'PACKER_AZURE_TENANT_ID', name: 'subscription-tenant-id', secretType: 'Secret'], 
                                                                                 [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']], 
                                                                                 credentialIDOverride: 'jenkins-managed-identity', 
-                                                                                keyVaultURLOverride: "https://ccd-demo.vault.azure.net/")
+                                                                                keyVaultURLOverride: "https://${vaultName}-${environment.demoName}.vault.azure.net/")
                                         packerBuildDemo {
+                                                echo "step 2"
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
                                                 //var = ["name=value"] // optional variable setting
