@@ -115,8 +115,8 @@ node {
                                         withAzureKeyvault(azureKeyVaultSecrets: [[envVariable: 'PACKER_AZURE_CLIENT_ID', name: 'subscription-client-id', secretType: 'Secret'], 
                                                                                 [envVariable: 'PACKER_AZURE_CLIENT_SECRET', name: 'subscription-client-secret', secretType: 'Secret'], 
                                                                                 [envVariable: 'PACKER_AZURE_TENANT_ID', name: 'subscription-tenant-id', secretType: 'Secret'], 
-                                                                                [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']]
-                                                         )
+                                                                                [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']], 
+                                                                                keyVaultURLOverride: "https://ccd-demo.vault.azure.net/")
                                                                                 echo "${PACKER_AZURE_SUBSCRIPTION_ID}"
                                         packerBuildDemo {
                                                 echo "step 2"
