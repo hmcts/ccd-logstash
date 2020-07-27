@@ -7,7 +7,7 @@ import uk.gov.hmcts.contino.HealthChecker
 
 properties([
         parameters([
-                choice(name: 'PRODUCT_NAME', choices: 'ccd\nprobate\nsweeper\ncmc\nddiv\nccdprobate\nsscs\ndethos', description: 'product name like probate, ccd, div.'),
+                choice(name: 'PRODUCT_NAME', choices: 'ccd\nprobate\nsweeper\ncmc\ndiv\nccdprobate\nsscs\ndethos', description: 'product name like probate, ccd, div.'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
         ])
