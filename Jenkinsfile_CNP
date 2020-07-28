@@ -83,7 +83,7 @@ node {
                         onMaster {
                                 withSubscription('nonprod') {
 
-                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
+                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${vaultName}-${environment.nonProdName}")
                                         initialiseLogstashConfFiles(keyVault, 'nonprod', 'aat')
 
                                         packerBuildNonProd {
