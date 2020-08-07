@@ -1,5 +1,5 @@
 vm_size = "Standard_D3_v2"
 vm_disk_type = "Standard_LRS"
-dynatrace_instance = "yrk32651"
-dynatrace_hostgroup = "DEMO_CFT"
-dynatrace_token = "${data.azurerm_key_vault_secret.dynatrace_token.value}"
+# dynatrace_instance = "yrk32651"
+# dynatrace_hostgroup = "DEMO_CFT"
+# dynatrace_token = "${data.azurerm_key_vault_secret.dynatrace_token.value}"
