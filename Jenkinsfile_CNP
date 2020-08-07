@@ -41,13 +41,13 @@ node {
                                                 (fileExists("${environment.nonProdName}.tfvars") ? " -var-file=${environment.nonProdName}.tfvars" : "")
                                 }
 
-                                withSubscription('prod') {
-                                        sh 'terraform init'
-                                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.prodName}' -var 'name=${productName}' " +
-                                                "-var " +
-                                                "'subscription=prod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
-                                                (fileExists("${environment.prodName}.tfvars") ? " -var-file=${environment.prodName}.tfvars" : "")
-                                }
+//                                withSubscription('prod') {
+//                                        sh 'terraform init'
+//                                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.prodName}' -var 'name=${productName}' " +
+//                                                "-var " +
+//                                                "'subscription=prod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
+//                                                (fileExists("${environment.prodName}.tfvars") ? " -var-file=${environment.prodName}.tfvars" : "")
+//                                }
                         }
 
                         onDemo {
@@ -81,29 +81,29 @@ node {
                 stage("Packer Build Logstash Image - ${productName}")
                  {def vaultName = (productName=="sweeper") || (productName=="ccdprobate") || (productName=="ccdcmc") || (productName=="ccddivorce") || (productName=="ccdsscs") || (productName=="ccdethos") ? "ccd" : productName
                         onMaster {
-//                                withSubscription('nonprod') {
-//
-//                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
-//                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'aat')
-//
-//                                        packerBuildNonProd {
-//                                                bin = './packer' // optional location of packer install
-//                                                template = 'packer_images/logstash.packer.json'
-//                                                //var = ["name=value"] // optional variable setting
-//                                        }
-//                                }
+                                withSubscription('nonprod') {
 
-                                withSubscription('prod') {
+                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${vaultName}-${environment.nonProdName}")
+                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'aat')
 
-                                        KeyVault keyVault = new KeyVault(this, 'prod', "${vaultName}-${environment.prodName}")
-                                        initialiseLogstashConfFiles(keyVault, 'prod', 'prod')
-
-                                        packerBuildProd {
+                                        packerBuildNonProd {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
                                                 //var = ["name=value"] // optional variable setting
                                         }
                                 }
+
+//                                withSubscription('prod') {
+//
+//                                        KeyVault keyVault = new KeyVault(this, 'prod', "${vaultName}-${environment.prodName}")
+//                                        initialiseLogstashConfFiles(keyVault, 'prod', 'prod')
+//
+//                                        packerBuildProd {
+//                                                bin = './packer' // optional location of packer install
+//                                                template = 'packer_images/logstash.packer.json'
+//                                                //var = ["name=value"] // optional variable setting
+//                                        }
+//                                }
                         }
 
                         onDemo {
@@ -151,11 +151,11 @@ node {
 
         if (params.DEPLOY_LOGSTASH == true) {
                 onMaster {
-//                        withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
-//                        healthCheckStage(environment.nonProdName)
+                        withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
+                        healthCheckStage(environment.nonProdName)
 
-                        withInfrastructurePipeline(productName, environment.prodName, 'prod')
-                        healthCheckStage(environment.prodName)
+//                        withInfrastructurePipeline(productName, environment.prodName, 'prod')
+//                        healthCheckStage(environment.prodName)
 
                 }
 
