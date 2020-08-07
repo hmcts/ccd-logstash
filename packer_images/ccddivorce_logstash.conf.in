@@ -11,16 +11,15 @@ input {
         jdbc_page_size => "20000"
         jdbc_default_timezone => "UTC"
 
-        use_column_value => true
-        tracking_column => last_modified
-        tracking_column_type => "timestamp"
+        # keep this as false to ensure that sql_last_value can be used for both last_modified and supplementary_data_last_modified
+        use_column_value => false
 
         parameters => { 
                         "state" => "DRAFT"
                         "jurisdiction" => "DIVORCE"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification from case_data where last_modified >= :sql_last_value AND jurisdiction = :jurisdiction and upper(STATE) != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, supplementary_data_last_modified, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where (last_modified >= :sql_last_value OR supplementary_data_last_modified  >= :sql_last_value) AND jurisdiction = :jurisdiction and upper(STATE) != :state"
 
     	clean_run => false
     	last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_ccd"
@@ -43,6 +42,11 @@ filter{
 		target => "data_classification"
 		remove_field => ["json_data_classification"]
 	}
+	json{
+        source => "json_supplementary_data"
+        target => "supplementary_data"
+        remove_field => ["json_supplementary_data"]
+    }
 	# mutate { remove_field => [ "@timestamp", "@version" ] }
 	mutate {
     	add_field => { "index_id" => "%{case_type_id}_cases" }
