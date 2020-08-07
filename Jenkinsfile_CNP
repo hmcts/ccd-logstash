@@ -116,12 +116,12 @@ node {
                                         //                                         [envVariable: 'PACKER_AZURE_TENANT_ID', name: 'subscription-tenant-id', secretType: 'Secret'], 
                                         //                                         [envVariable: 'PACKER_AZURE_SUBSCRIPTION_ID', name: 'subscription-id', secretType: 'Secret']], 
                                         //                                         keyVaultURLOverride: "https://ccd-demo.vault.azure.net/")
-                                        {packerBuildDemo {
+                                        packerBuildDemo {
                                                 bin = './packer' // optional location of packer install
                                                 template = 'packer_images/logstash.packer.json'
                                                 //var = ["name=value"] // optional variable setting
                                         }
-                                        }
+
                                 }
                         }
 
