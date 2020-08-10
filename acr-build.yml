@@ -16,8 +16,11 @@ steps:
 
   - id: push-images
     push:
-      - "{{.Run.Registry}}/ccd/logstash/ccd:latest"
-      - "{{.Run.Registry}}/ccd/logstash/probate:latest"
+      - "{{.Run.Registry}}/ccd/logstash:latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:probate-latest"
+      - "{{.Run.Registry}}/ccd/logstash:probate-{{.Run.ID}}"
     when:
       - probate
       - ccd
