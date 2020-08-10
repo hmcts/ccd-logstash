@@ -10,7 +10,7 @@ steps:
 
   - id: probate
     build: >
-      -t {{.Run.Registry}}/ccd/logstash/probate
+      -t {{.Run.Registry}}/ccd/logstash:probate-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:probate-latest
       --build-arg conf=ccd_logstash.conf.in
       --target probate
       .
