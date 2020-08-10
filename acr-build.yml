@@ -19,4 +19,5 @@ steps:
       - "{{.Run.Registry}}/ccd/logstash/ccd:latest"
       - "{{.Run.Registry}}/ccd/logstash/probate:latest"
     when:
-      - runtime
+      - probate
+      - ccd
