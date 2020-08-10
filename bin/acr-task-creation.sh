@@ -7,6 +7,6 @@ az acr task create \
   --registry $ACR_NAME \
   --name ccd-logstash \
   --context https://github.com/hmcts/ccd-logstash.git \
-  --file acr-build.yaml \
+  --file acr-build.yml \
   --git-access-token $GIT_PAT \
   --subscription DCD-CNP-PROD
