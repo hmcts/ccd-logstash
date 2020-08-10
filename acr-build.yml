@@ -1,0 +1,28 @@
+version: v1.1.0
+steps:
+  - id: ccd
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash/ccd
+      --target ccd
+      --build-arg conf=ccd_logstash.conf.in
+      .
+    when:
+      - pull-ccd
+    keep: true
+
+  - id: probate
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash/probate
+      --build-arg conf=ccd_logstash.conf.in
+      --target probate
+      .
+    when:
+      - pull-probate
+    keep: true
+
+  - id: push-images
+    push:
+      - "{{.Run.Registry}}/ccd/logstash/ccd:latest"
+      - "{{.Run.Registry}}/ccd/logstash/probate:latest"
+    when:
+      - runtime
