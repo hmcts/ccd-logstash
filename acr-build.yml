@@ -6,8 +6,6 @@ steps:
       --target ccd
       --build-arg conf=ccd_logstash.conf.in
       .
-    when:
-      - pull-ccd
     keep: true
 
   - id: probate
