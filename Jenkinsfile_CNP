@@ -90,17 +90,17 @@ node {
                 stage("Packer Build Logstash Image - ${productName}")
                  {def vaultName = (productName=="sweeper") || (productName=="ccdprobate") || (productName=="ccdcmc") || (productName=="ccddivorce") || (productName=="ccdsscs") || (productName=="ccdethos") ? "ccd" : productName
                         onMaster {
-//                                withSubscription('nonprod') {
-//
-//                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${productName}-${environment.nonProdName}")
-//                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'aat')
-//
-//                                        packerBuildNonProd {
-//                                                bin = './packer' // optional location of packer install
-//                                                template = 'packer_images/logstash.packer.json'
-//                                                //var = ["name=value"] // optional variable setting
-//                                        }
-//                                }
+                                withSubscription('nonprod') {
+
+                                        KeyVault keyVault = new KeyVault(this, 'nonprod', "${vaultName}-${environment.nonProdName}")
+                                        initialiseLogstashConfFiles(keyVault, 'nonprod', 'aat')
+
+                                        packerBuildNonProd {
+                                                bin = './packer' // optional location of packer install
+                                                template = 'packer_images/logstash.packer.json'
+                                                //var = ["name=value"] // optional variable setting
+                                        }
+                                }
 
                                 withSubscription('prod') {
 
@@ -173,8 +173,8 @@ node {
 
         if (params.DEPLOY_LOGSTASH == true) {
                 onMaster {
-//                        withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
-//                        healthCheckStage(environment.nonProdName)
+                        withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
+                        healthCheckStage(environment.nonProdName)
 
                         withInfrastructurePipeline(productName, environment.prodName, 'prod')
                         healthCheckStage(environment.prodName)

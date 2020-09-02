@@ -33,6 +33,11 @@ data "azurerm_key_vault_secret" "ccd_elastic_search_public_key" {
   key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }
 
+data "azurerm_key_vault_secret" "dynatrace_token" {
+  name         = "dynatrace-token"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
+}
+
 module "logstash" {
   source = "git@github.com:hmcts/cnp-module-logstash.git?ref=jenkins-beta-update"
   product = "${var.product}"
@@ -44,7 +49,10 @@ module "logstash" {
   vm_disk_type = "${var.vm_disk_type}"
   target_elastic_search_product = "ccd"
   ssh_elastic_search_public_key = "${data.azurerm_key_vault_secret.ccd_elastic_search_public_key.value}"
-  mgmt_subscription_id = "${var.mgmt_subscription_id}"
+  mgmtprod_subscription_id = "${var.mgmtprod_subscription_id}"
+  dynatrace_instance = "${var.dynatrace_instance}"
+  dynatrace_hostgroup = "${var.dynatrace_hostgroup}"
+  dynatrace_token = "${data.azurerm_key_vault_secret.dynatrace_token.value}"
 }
 
 
