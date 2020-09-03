@@ -39,7 +39,7 @@ data "azurerm_key_vault_secret" "dynatrace_token" {
 }
 
 module "logstash" {
-  source = "git@github.com:hmcts/cnp-module-logstash.git?ref=jenkins-beta-update"
+  source = "git@github.com:hmcts/cnp-module-logstash.git?ref=master"
   product = "${var.product}"
   location = "${var.location}"
   env = "${var.env}"
