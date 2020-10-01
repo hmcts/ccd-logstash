@@ -46,16 +46,6 @@
     },
     {
       "type": "file",
-      "source": "packer_images/sweeper_dead_letter_pipeline.conf",
-      "destination": "sweeper_dead_letter_pipeline.conf"
-    },
-    {
-      "type": "file",
-      "source": "packer_images/sweeper_dead_letter_indexing_pipeline.conf",
-      "destination": "sweeper_dead_letter_indexing_pipeline.conf"
-    },
-    {
-      "type": "file",
       "source": "packer_images/logstash.yml",
       "destination": "logstash.yml"
     },
