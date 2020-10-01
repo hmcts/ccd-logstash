@@ -464,11 +464,8 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String sub, String env) {
 
         sh "cp packer_images/dead_letter_indexing_pipeline.conf.in packer_images/dead_letter_indexing_pipeline.conf"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/dead_letter_indexing_pipeline.conf"
+        sh "sed -i 's|\"\${DEAD_LETTER_PREFIX}\"|${productName}|' packer_images/dead_letter_indexing_pipeline.conf"
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
-
-        sh "cp packer_images/sweeper_dead_letter_indexing_pipeline.conf.in packer_images/sweeper_dead_letter_indexing_pipeline.conf"
-        sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/sweeper_dead_letter_indexing_pipeline.conf"
-        sh "cat packer_images/sweeper_dead_letter_indexing_pipeline.conf"
 }
 
 def getESUrlFromCCDVault(String sub, String env) {
