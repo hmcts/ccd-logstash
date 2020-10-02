@@ -179,7 +179,10 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
 
         sh "cp packer_images/dead_letter_indexing_pipeline.conf.in packer_images/dead_letter_indexing_pipeline.conf"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/dead_letter_indexing_pipeline.conf"
-        sh "sed -i 's|\"\${DEAD_LETTER_PREFIX}\"|${productName}|' packer_images/dead_letter_indexing_pipeline.conf"
+        if("${productName}" == "sweeper")
+                sh "sed -i 's|\"\${DEAD_LETTER_PREFIX}\"|${productName}|' packer_images/dead_letter_indexing_pipeline.conf"
+        else
+                sh "sed -i 's|\"\${DEAD_LETTER_PREFIX}\"|logstash|' packer_images/dead_letter_indexing_pipeline.conf"
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
 }
 
