@@ -33,10 +33,10 @@ data "azurerm_key_vault_secret" "ccd_elastic_search_public_key" {
   key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }
 
-#data "azurerm_key_vault_secret" "dynatrace_token" {
-#  name         = "dynatrace-token"
-#  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
-#}
+data "azurerm_key_vault_secret" "dynatrace_token" {
+  name         = "dynatrace-token"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
+}
 
 module "logstash" {
   source = "git@github.com:hmcts/cnp-module-logstash.git?ref=master"
