@@ -50,9 +50,9 @@ module "logstash" {
   target_elastic_search_product = "ccd"
   ssh_elastic_search_public_key = "${data.azurerm_key_vault_secret.ccd_elastic_search_public_key.value}"
   mgmtprod_subscription_id = "${var.mgmtprod_subscription_id}"
-  # dynatrace_instance = "${var.dynatrace_instance}"
-  # dynatrace_hostgroup = "${var.dynatrace_hostgroup}"
-  # dynatrace_token = "${data.azurerm_key_vault_secret.dynatrace_token.value}"
+  dynatrace_instance = "${var.dynatrace_instance}"
+  dynatrace_hostgroup = "${var.dynatrace_hostgroup}"
+  dynatrace_token = "${data.azurerm_key_vault_secret.dynatrace_token.value}"
 }
 
 
