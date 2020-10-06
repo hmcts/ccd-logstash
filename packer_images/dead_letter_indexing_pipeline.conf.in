@@ -33,6 +33,6 @@ output {
   elasticsearch {
     hosts => ["${ES_DATA_NODES_URL}"]
     sniffing => false
-    index => ".logstash_dead_letter"
+    index => ".${DEAD_LETTER_PREFIX}_dead_letter"
   }
 }

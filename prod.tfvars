@@ -1,2 +1,5 @@
 vm_size = "Standard_D3_v2"
 vm_disk_type = "Standard_LRS"
+dynatrace_instance = "ebe20728"
+dynatrace_hostgroup = "PROD_CFT"
+dynatrace_token = "${data.azurerm_key_vault_secret.dynatrace_token.value}"
