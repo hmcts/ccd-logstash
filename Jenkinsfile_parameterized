@@ -181,7 +181,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/dead_letter_indexing_pipeline.conf"
 
         deadLetterValue = ("${productName}" == "sweeper") ? "${productName}" : "logstash"
-        sh "sed -i 's|\"\${DEAD_LETTER_PREFIX}\"|${deadLetterValue}|' packer_images/dead_letter_indexing_pipeline.conf"
+        sh "sed -i 's|\${DEAD_LETTER_PREFIX}|${deadLetterValue}|' packer_images/dead_letter_indexing_pipeline.conf"
 
         sh "cat packer_images/dead_letter_indexing_pipeline.conf"
 }
