@@ -1,0 +1,68 @@
+---
+version: '3.8'
+
+services:
+  ccd-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccd_logstash.conf.in
+    image: hmcts/ccd/logstash:ccd-latest
+    networks:
+      - ccd-network
+
+  ccdcmc-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdcmc_logstash.conf.in
+    image: hmcts/ccd/logstash:ccdcmc-latest
+    networks:
+      - ccd-network
+
+  ccddivorce-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccddivorce_logstash.conf.in
+    image: hmcts/ccd/logstash:ccddivorce-latest
+    networks:
+      - ccd-network
+
+  ccdethos-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdethos_logstash.conf.in
+    image: hmcts/ccd/logstash:ccdethos-latest
+    networks:
+      - ccd-network
+
+  ccdprobate-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdprobate_logstash.conf.in
+    image: hmcts/ccd/logstash:ccdprobate-latest
+    networks:
+      - ccd-network
+
+  ccdsscs-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdsscs_logstash.conf.in
+    image: hmcts/ccd/logstash:ccdsscs-latest
+    networks:
+      - ccd-network
+
+networks:
+  ccd-network:
+    external: true
+
