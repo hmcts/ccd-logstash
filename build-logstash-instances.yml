@@ -12,53 +12,53 @@ services:
     networks:
       - ccd-network
 
-  ccdcmc-logstash:
+  cmc-logstash:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         conf: ccdcmc_logstash.conf.in
-    image: hmcts/ccd/logstash:ccdcmc-latest
+    image: hmcts/ccd/logstash:cmc-latest
     networks:
       - ccd-network
 
-  ccddivorce-logstash:
+  divorce-logstash:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         conf: ccddivorce_logstash.conf.in
-    image: hmcts/ccd/logstash:ccddivorce-latest
+    image: hmcts/ccd/logstash:divorce-latest
     networks:
       - ccd-network
 
-  ccdethos-logstash:
+  ethos-logstash:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         conf: ccdethos_logstash.conf.in
-    image: hmcts/ccd/logstash:ccdethos-latest
+    image: hmcts/ccd/logstash:ethos-latest
     networks:
       - ccd-network
 
-  ccdprobate-logstash:
+  probate-logstash:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         conf: ccdprobate_logstash.conf.in
-    image: hmcts/ccd/logstash:ccdprobate-latest
+    image: hmcts/ccd/logstash:probate-latest
     networks:
       - ccd-network
 
-  ccdsscs-logstash:
+  sscs-logstash:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         conf: ccdsscs_logstash.conf.in
-    image: hmcts/ccd/logstash:ccdsscs-latest
+    image: hmcts/ccd/logstash:sscs-latest
     networks:
       - ccd-network
 
