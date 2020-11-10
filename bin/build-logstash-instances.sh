@@ -12,3 +12,5 @@ docker build -t hmcts/ccd/logstash:probate-latest --build-arg conf=ccdprobate_lo
 
 docker build -t hmcts/ccd/logstash:sscs-latest --build-arg conf=ccdsscs_logstash.conf.in .
 
+docker build -t hmcts/ccd/logstash:testall-latest --build-arg conf=ccdtestall_logstash.conf.in .
+

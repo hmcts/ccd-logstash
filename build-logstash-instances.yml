@@ -62,6 +62,16 @@ services:
     networks:
       - ccd-network
 
+  testall-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdtestall_logstash.conf.in
+    image: hmcts/ccd/logstash:testall-latest
+    networks:
+      - ccd-network
+
 networks:
   ccd-network:
     external: true
