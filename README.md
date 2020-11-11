@@ -29,10 +29,10 @@ To create logstash instances of all services CCD is supporting execute build-log
  
 ```bash 
  **REPOSITORY           TAG** 
- hmcts/ccd/logstash   ccdsscs-latest   
- hmcts/ccd/logstash   ccdprobate-latest
- hmcts/ccd/logstash   ccdethos-latest  
- hmcts/ccd/logstash   ccddivorce-latest
- hmcts/ccd/logstash   ccdcmc-latest    
+ hmcts/ccd/logstash   sscs-latest   
+ hmcts/ccd/logstash   probate-latest
+ hmcts/ccd/logstash   ethos-latest  
+ hmcts/ccd/logstash   divorce-latest
+ hmcts/ccd/logstash   cmc-latest    
  hmcts/ccd/logstash   ccd-latest  
 ``` 
