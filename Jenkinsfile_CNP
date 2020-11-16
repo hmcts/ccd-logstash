@@ -10,6 +10,7 @@ properties([
                 choice(name: 'PRODUCT_NAME', choices: 'ccd\nprobate\nsweeper\nccdcmc\nccddivorce\nccdprobate\nccdsscs\nccdethos', description: 'product name like probate, ccd, div.'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
+                text(name: 'LAST_MODIFIED_SECONDS_DELAY', defaultValue: '2', description: 'time delay (in seconds) for query\'s last modified check'),
         ])
 ])
 
@@ -455,6 +456,7 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String sub, String env) {
         sh "sed -i 's|\${DB_USER}|${db_user}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\${DB_PWD}|${db_pass}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/${productName}_logstash.conf"
+        sh "sed -i 's|\${LAST_MODIFIED_SECONDS_DELAY}|${params.LAST_MODIFIED_SECONDS_DELAY}|' packer_images/${productName}_logstash.conf"
 
         sh "cat packer_images/${productName}_logstash.conf"
 
