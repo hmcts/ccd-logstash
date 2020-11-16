@@ -6,7 +6,7 @@ import uk.gov.hmcts.contino.HealthChecker
 
 properties([
         parameters([
-                choice(name: 'PRODUCT_NAME', choices: 'ccd\nprobate\nsweeper\nccdcmc\nccddivorce\nccdprobate\nccdsscs', description: 'product name like probate, ccd, div.'),
+                choice(name: 'PRODUCT_NAME', choices: 'ccd\nprobate\nccdcmc\nccddivorce\nccdprobate\nccdsscs', description: 'product name like probate, ccd, div.'),
                 choice(name: 'ENVIRONMENT', choices: 'sandbox\nsaat\nsprod', description: 'Environment where code should be build and deployed'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
@@ -17,7 +17,6 @@ productName = params.PRODUCT_NAME
 environment = params.ENVIRONMENT
 
 node {
-        def vaultName = (productName=="sweeper") ? "ccd" : productName
         stage('Checkout') {
                 deleteDir()
                 checkout scm
@@ -45,7 +44,7 @@ node {
                 stage("Packer Build Logstash Image - ${productName} ${environment}") {
                         withSubscription('sandbox') {
 
-                                KeyVault keyVault = new KeyVault(this, 'sandbox', "${vaultName}-${environment}")
+                                KeyVault keyVault = new KeyVault(this, 'sandbox', "${productName}-${environment}")
 
                                 initialiseLogstashConfFiles(keyVault)
 
@@ -147,7 +146,7 @@ def packerBuild(body) {
 
 def initialiseLogstashConfFiles(KeyVault keyVault) {
         def dataBaseName
-        if("${productName}" == "ccd" || "${productName}" == "sweeper" ||"${productName}" == "ccddivorce"  || "${productName}" == "ccdcmc" || "${productName}" == "ccdprobate" || "${productName}" == "ccdsscs") 
+        if("${productName}" == "ccd" || "${productName}" == "ccddivorce"  || "${productName}" == "ccdcmc" || "${productName}" == "ccdprobate" || "${productName}" == "ccdsscs") 
                 dataBaseName = "ccd-data-store-api"
         else if("${productName}" == "probate" )
                 dataBaseName = "probatemandb"
