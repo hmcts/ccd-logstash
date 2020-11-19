@@ -55,7 +55,7 @@ filter{
   	}
 	mutate {
 		lowercase => [ "index_id" ]
-    }
+	}
 }
 
 #TODO future releases of ES will use _doc as mapping type. When LS sets _doc as the default type, remove 'document_type'
