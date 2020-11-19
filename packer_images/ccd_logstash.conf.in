@@ -21,7 +21,7 @@ input {
                         "sscsj" => "SSCS"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data, db_last_modified from case_data where db_last_modified > :sql_last_value::timestamp - interval '${LAST_MODIFIED_SECONDS_DELAY} seconds' AND jurisdiction != :divorcej AND jurisdiction != :cmcj AND jurisdiction != :probatej AND jurisdiction != :sscsj AND jurisdiction != :ethosj AND upper(STATE) != :state"
+        statement => "UPDATE case_data SET ls_processed = true WHERE ls_processed = false AND jurisdiction != :divorcej AND jurisdiction != :cmcj AND jurisdiction != :probatej AND jurisdiction != :sscsj AND jurisdiction != :ethosj AND upper(STATE) != :state RETURNING id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data"
 
     	clean_run => false
     	last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_ccd"
@@ -55,7 +55,7 @@ filter{
   	}
 	mutate {
 		lowercase => [ "index_id" ]
-	}
+    }
 }
 
 #TODO future releases of ES will use _doc as mapping type. When LS sets _doc as the default type, remove 'document_type'
