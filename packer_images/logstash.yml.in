@@ -123,11 +123,12 @@ path.data: /var/lib/logstash
 # cloud.auth: elastic:<password>
 #
 # ------------ Queuing Settings --------------
+# https://www.elastic.co/guide/en/logstash/current/persistent-queues.html
 #
 # Internal queuing model, "memory" for legacy in-memory based queuing and
 # "persisted" for disk-based acked queueing. Defaults is memory
 #
-# queue.type: memory
+queue.type: persisted
 #
 # If using queue.type: persisted, the directory path where the data files will be stored.
 # Default is path.data/queue
