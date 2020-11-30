@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "1.22.1"
+  version = "2.38.0"
 }
 
 resource "azurerm_resource_group" "logstash-resourcegroup" {
