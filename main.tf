@@ -3,14 +3,14 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "logstash-resourcegroup" {
-  name     = "${var.product}-logstash-${var.env}"
-  location = "${var.location}"
-
-  tags = "${merge(var.common_tags,
-    map("lastUpdated", "${timestamp()}")
-    )}"
-}
+#resource "azurerm_resource_group" "logstash-resourcegroup" {
+#  name     = "${var.product}-logstash-${var.env}"
+#  location = "${var.location}"
+#
+#  tags = "${merge(var.common_tags,
+#    map("lastUpdated", "${timestamp()}")
+#    )}"
+#}
 
 locals {
   // Vault name
