@@ -14,6 +14,13 @@ steps:
       .
     keep: true
 
+  - id: divorce
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:divorce-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:divorce-latest
+      --build-arg conf=ccddivorce_logstash.conf.in
+      .
+    keep: true
+
   - id: push-images
     push:
       - "{{.Run.Registry}}/ccd/logstash:latest"
@@ -21,6 +28,9 @@ steps:
       - "{{.Run.Registry}}/ccd/logstash:ccd-{{.Run.ID}}"
       - "{{.Run.Registry}}/ccd/logstash:probate-latest"
       - "{{.Run.Registry}}/ccd/logstash:probate-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:divorce-latest"
+      - "{{.Run.Registry}}/ccd/logstash:divorce-{{.Run.ID}}"
     when:
       - probate
       - ccd
+      - divorce
