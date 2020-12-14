@@ -11,7 +11,6 @@ input {
         use_column_value => false
 
         parameters => { 
-                        "state" => "DRAFT"
                         "divorcej" => "DIVORCE"
                         "cmcj" => "CMC"
                         "probatej" => "PROBATE"
@@ -19,7 +18,7 @@ input {
                         "sscsj" => "SSCS"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, supplementary_data_last_modified, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where (last_modified >= :sql_last_value OR supplementary_data_last_modified  >= :sql_last_value) AND jurisdiction != :divorcej AND jurisdiction != :cmcj AND jurisdiction != :probatej AND jurisdiction != :sscsj AND jurisdiction != :ethosj AND upper(STATE) != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where last_modified >= :sql_last_value AND jurisdiction != :divorcej AND jurisdiction != :cmcj AND jurisdiction != :probatej AND jurisdiction != :sscsj AND jurisdiction != :ethosj"
 
       clean_run => false
       last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_sweeper"
@@ -39,11 +38,10 @@ input {
         use_column_value => false
 
         parameters => { 
-                        "state" => "DRAFT"
                         "jurisdiction" => "CMC"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, supplementary_data_last_modified, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where (last_modified >= :sql_last_value OR supplementary_data_last_modified  >= :sql_last_value) AND jurisdiction = :jurisdiction and upper(STATE) != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where last_modified >= :sql_last_value AND jurisdiction = :jurisdiction"
 
       clean_run => false
       last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_sweeper"
@@ -63,11 +61,10 @@ input {
         use_column_value => false
 
         parameters => { 
-                        "state" => "DRAFT"
                         "jurisdiction" => "DIVORCE"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, supplementary_data_last_modified, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where (last_modified >= :sql_last_value OR supplementary_data_last_modified  >= :sql_last_value) AND jurisdiction = :jurisdiction and upper(STATE) != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where last_modified >= :sql_last_value AND jurisdiction = :jurisdiction"
 
       clean_run => false
       last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_sweeper"
@@ -87,11 +84,10 @@ input {
         use_column_value => false
 
         parameters => { 
-                        "state" => "DRAFT"
                         "jurisdiction" => "EMPLOYMENT"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, supplementary_data_last_modified, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where (last_modified >= :sql_last_value OR supplementary_data_last_modified  >= :sql_last_value) AND jurisdiction = :jurisdiction and upper(STATE) != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where last_modified >= :sql_last_value AND jurisdiction = :jurisdiction"
 
       clean_run => false
       last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_sweeper"
@@ -111,11 +107,10 @@ input {
         use_column_value => false
 
         parameters => { 
-                        "state" => "DRAFT"
                         "jurisdiction" => "PROBATE"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, supplementary_data_last_modified, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where (last_modified >= :sql_last_value OR supplementary_data_last_modified  >= :sql_last_value) AND jurisdiction = :jurisdiction and upper(STATE) != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where last_modified >= :sql_last_value AND jurisdiction = :jurisdiction"
 
       clean_run => false
       last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_sweeper"
@@ -135,11 +130,10 @@ input {
         use_column_value => false
 
         parameters => { 
-                        "state" => "DRAFT"
                         "jurisdiction" => "SSCS"
                       }
 
-        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, supplementary_data_last_modified, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where (last_modified >= :sql_last_value OR supplementary_data_last_modified  >= :sql_last_value) AND jurisdiction = :jurisdiction and upper(STATE) != :state"
+        statement => "SELECT id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data from case_data where last_modified >= :sql_last_value AND jurisdiction = :jurisdiction"
 
       clean_run => false
       last_run_metadata_path => "/usr/share/logstash/data/.logstash_jdbc_last_run_sweeper"
