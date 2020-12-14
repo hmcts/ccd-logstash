@@ -12,6 +12,10 @@ steps:
       -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-latest
       --build-arg conf=ccdprobate_logstash.conf.in
       .
+
+      -t {{.Run.Registry}}/ccd/logstash:probate-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:probate-logstash-latest
+      --build-arg conf=probate_logstash.conf.in
+      .
     keep: true
 
   - id: divorce
@@ -49,6 +53,8 @@ steps:
       - "{{.Run.Registry}}/ccd/logstash:cd-logstash-{{.Run.ID}}"
       - "{{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-latest"
       - "{{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:probate-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:probate-logstash-{{.Run.ID}}"
       - "{{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-latest"
       - "{{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-{{.Run.ID}}"
       - "{{.Run.Registry}}/ccd/logstash:ccd-cmc-logstash-latest"
