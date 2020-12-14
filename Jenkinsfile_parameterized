@@ -10,11 +10,15 @@ properties([
                 choice(name: 'ENVIRONMENT', choices: 'sandbox\nsaat\nsprod', description: 'Environment where code should be build and deployed'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
+                stringParam(name: 'START_CASE_ID', defaultValue: false, description: 'the DB case ID from which the Logstash Indexer needs to start indexing from'),
+                stringParam(name: 'END_CASE_ID', defaultValue: false, description: 'the DB case ID up to which the Logstash Indexer needs to index to'),
         ])
 ])
 
 productName = params.PRODUCT_NAME
 environment = params.ENVIRONMENT
+startCaseId = params.START_CASE_ID
+endCaseId = params.END_CASE_ID
 
 node {
         def vaultName = (productName=="sweeper") ? "ccd" : productName
@@ -170,6 +174,11 @@ def initialiseLogstashConfFiles(KeyVault keyVault) {
         sh "sed -i 's|\${DB_USER}|${db_user}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\${DB_PWD}|${db_pass}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/${productName}_logstash.conf"
+
+        if("${productName}" == "sweeper" ) {
+          sh "sed -i 's|\${START_CASE_ID}|${startCaseId}|' packer_images/${productName}_logstash.conf"
+          sh "sed -i 's|\${END_CASE_ID}|${endCaseId}|' packer_images/${productName}_logstash.conf"
+        }
 
         sh "cat packer_images/${productName}_logstash.conf"
 

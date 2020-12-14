@@ -10,10 +10,14 @@ properties([
                 choice(name: 'PRODUCT_NAME', choices: 'ccd\nprobate\nsweeper\nccdcmc\nccddivorce\nccdprobate\nccdsscs\nccdethos', description: 'product name like probate, ccd, div.'),
                 booleanParam(name: 'BUILD_LOGSTASH_IMAGE', defaultValue: false, description: 'set to true to build a new Logstash image'),
                 booleanParam(name: 'DEPLOY_LOGSTASH', defaultValue: false, description: 'set to true to deploy Logstash'),
+                stringParam(name: 'START_CASE_ID', defaultValue: false, description: 'the DB case ID from which the Logstash Indexer needs to start indexing from'),
+                stringParam(name: 'END_CASE_ID', defaultValue: false, description: 'the DB case ID up to which the Logstash Indexer needs to index to'),
         ])
 ])
 
 productName = params.PRODUCT_NAME
+startCaseId = params.START_CASE_ID
+endCaseId = params.END_CASE_ID
 Environment environment = new Environment(env)
 
 node {
@@ -455,6 +459,11 @@ def initialiseLogstashConfFiles(KeyVault keyVault, String sub, String env) {
         sh "sed -i 's|\${DB_USER}|${db_user}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\${DB_PWD}|${db_pass}|' packer_images/${productName}_logstash.conf"
         sh "sed -i 's|\"\${ES_DATA_NODES_URL}\"|${es_url}|' packer_images/${productName}_logstash.conf"
+
+        if("${productName}" == "sweeper" ) {
+                sh "sed -i 's|\${START_CASE_ID}|${startCaseId}|' packer_images/${productName}_logstash.conf"
+                sh "sed -i 's|\${END_CASE_ID}|${endCaseId}|' packer_images/${productName}_logstash.conf"
+        }
 
         sh "cat packer_images/${productName}_logstash.conf"
 
