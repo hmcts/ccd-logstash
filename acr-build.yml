@@ -9,40 +9,50 @@ steps:
 
   - id: probate
     build: >
-      -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-latest
-      --build-arg conf=ccdprobate_logstash.conf.in
-      .
-
       -t {{.Run.Registry}}/ccd/logstash:probate-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:probate-logstash-latest
       --build-arg conf=probate_logstash.conf.in
       .
     keep: true
 
-  - id: divorce
+  - id: ccdprobate
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-latest
+      --build-arg conf=ccdprobate_logstash.conf.in
+      .
+    keep: true
+
+  - id: ccddivorce
     build: >
       -t {{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-latest
       --build-arg conf=ccddivorce_logstash.conf.in
       .
     keep: true
 
-  - id: cmc
+  - id: ccdcmc
     build: >
       -t {{.Run.Registry}}/ccd/logstash:ccd-cmc-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-cmc-logstash-latest
       --build-arg conf=ccdcmc_logstash.conf.in
       .
     keep: true
 
-  - id: ethos
+  - id: ccdethos
     build: >
       -t {{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-latest
       --build-arg conf=ccdethos_logstash.conf.in
       .
     keep: true
 
-  - id: sscs
+  - id: ccdsscs
     build: >
       -t {{.Run.Registry}}/ccd/logstash:ccd-sscs-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-sscs-logstash-latest
       --build-arg conf=ccdsscs_logstash.conf.in
+      .
+    keep: true
+
+  - id: sweeper
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-latest
+      --build-arg conf=sweeper_logstash.conf.in
       .
     keep: true
 
@@ -63,7 +73,14 @@ steps:
       - "{{.Run.Registry}}/ccd/logstash:ccd-sscs-logstash-{{.Run.ID}}"
       - "{{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-latest"
       - "{{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-{{.Run.ID}}"
     when:
-      - probate
       - ccd
-      - divorce
+      - ccdcmc
+      - ccdsscs
+      - ccdethos
+      - probate
+      - ccdprobate
+      - ccddivorce
+      - sweeper
