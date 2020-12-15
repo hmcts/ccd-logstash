@@ -35,4 +35,5 @@ To create logstash instances of all services CCD is supporting execute build-log
  hmcts/ccd/logstash   ccd-divorce-logstash-latest
  hmcts/ccd/logstash   ccd-cmc-logstash-latest
  hmcts/ccd/logstash   ccd-logstash-latest
+ hmcts/ccd/logstash   ccd-sweeper-logstash-latest
 ``` 
