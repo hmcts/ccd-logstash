@@ -60,7 +60,7 @@ steps:
     push:
       - "{{.Run.Registry}}/ccd/logstash:latest"
       - "{{.Run.Registry}}/ccd/logstash:ccd-logstash-latest"
-      - "{{.Run.Registry}}/ccd/logstash:cd-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-logstash-{{.Run.ID}}"
       - "{{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-latest"
       - "{{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-{{.Run.ID}}"
       - "{{.Run.Registry}}/ccd/logstash:probate-logstash-latest"
