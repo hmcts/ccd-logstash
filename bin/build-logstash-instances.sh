@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-docker build -t hmcts/ccd/logstash:ccd-latest --build-arg conf=ccd_logstash.conf.in .
+docker build -t hmcts/ccd/logstash:ccd-logstash-latest --build-arg conf=ccd_logstash.conf.in .
 
 docker build -t hmcts/ccd/logstash:ccd-cmc-logstash-latest --build-arg conf=ccdcmc_logstash.conf.in .
 
