@@ -2,35 +2,85 @@ version: v1.1.0
 steps:
   - id: ccd
     build: >
-      -t {{.Run.Registry}}/ccd/logstash:ccd-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-latest -t {{.Run.Registry}}/ccd/logstash:latest
+      -t {{.Run.Registry}}/ccd/logstash:ccd-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-logstash-latest -t {{.Run.Registry}}/ccd/logstash:latest
       --build-arg conf=ccd_logstash.conf.in
       .
     keep: true
 
   - id: probate
     build: >
-      -t {{.Run.Registry}}/ccd/logstash:probate-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:probate-latest
+      -t {{.Run.Registry}}/ccd/logstash:probate-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:probate-logstash-latest
+      --build-arg conf=probate_logstash.conf.in
+      .
+    keep: true
+
+  - id: ccdprobate
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-latest
       --build-arg conf=ccdprobate_logstash.conf.in
       .
     keep: true
 
-  - id: divorce
+  - id: ccddivorce
     build: >
-      -t {{.Run.Registry}}/ccd/logstash:divorce-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:divorce-latest
+      -t {{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-latest
       --build-arg conf=ccddivorce_logstash.conf.in
+      .
+    keep: true
+
+  - id: ccdcmc
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:ccd-cmc-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-cmc-logstash-latest
+      --build-arg conf=ccdcmc_logstash.conf.in
+      .
+    keep: true
+
+  - id: ccdethos
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-latest
+      --build-arg conf=ccdethos_logstash.conf.in
+      .
+    keep: true
+
+  - id: ccdsscs
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:ccd-sscs-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-sscs-logstash-latest
+      --build-arg conf=ccdsscs_logstash.conf.in
+      .
+    keep: true
+
+  - id: sweeper
+    build: >
+      -t {{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-{{.Run.ID}} -t {{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-latest
+      --build-arg conf=sweeper_logstash.conf.in
       .
     keep: true
 
   - id: push-images
     push:
       - "{{.Run.Registry}}/ccd/logstash:latest"
-      - "{{.Run.Registry}}/ccd/logstash:ccd-latest"
-      - "{{.Run.Registry}}/ccd/logstash:ccd-{{.Run.ID}}"
-      - "{{.Run.Registry}}/ccd/logstash:probate-latest"
-      - "{{.Run.Registry}}/ccd/logstash:probate-{{.Run.ID}}"
-      - "{{.Run.Registry}}/ccd/logstash:divorce-latest"
-      - "{{.Run.Registry}}/ccd/logstash:divorce-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-probate-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:probate-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:probate-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-divorce-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-cmc-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-cmc-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-sscs-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-sscs-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-ethos-logstash-{{.Run.ID}}"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-latest"
+      - "{{.Run.Registry}}/ccd/logstash:ccd-sweeper-logstash-{{.Run.ID}}"
     when:
-      - probate
       - ccd
-      - divorce
+      - ccdcmc
+      - ccdsscs
+      - ccdethos
+      - probate
+      - ccdprobate
+      - ccddivorce
+      - sweeper
