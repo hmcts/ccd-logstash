@@ -1,0 +1,78 @@
+---
+version: '3.8'
+
+services:
+  ccd-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccd_logstash.conf.in
+    image: hmcts/ccd/logstash:ccd-latest
+    networks:
+      - ccd-network
+
+  cmc-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdcmc_logstash.conf.in
+    image: hmcts/ccd/logstash:cmc-latest
+    networks:
+      - ccd-network
+
+  divorce-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccddivorce_logstash.conf.in
+    image: hmcts/ccd/logstash:divorce-latest
+    networks:
+      - ccd-network
+
+  ethos-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdethos_logstash.conf.in
+    image: hmcts/ccd/logstash:ethos-latest
+    networks:
+      - ccd-network
+
+  probate-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdprobate_logstash.conf.in
+    image: hmcts/ccd/logstash:probate-latest
+    networks:
+      - ccd-network
+
+  sscs-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdsscs_logstash.conf.in
+    image: hmcts/ccd/logstash:sscs-latest
+    networks:
+      - ccd-network
+
+  testall-logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        conf: ccdtestall_logstash.conf.in
+    image: hmcts/ccd/logstash:testall-latest
+    networks:
+      - ccd-network
+
+networks:
+  ccd-network:
+    external: true
+
