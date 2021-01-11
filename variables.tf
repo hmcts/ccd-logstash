@@ -42,11 +42,11 @@ variable "name" {
   type = "string"
 }
 
-variable "dynatrace_instance" {}
+#variable "dynatrace_instance" {}
 
-variable "dynatrace_token" {}
+#variable "dynatrace_token" {}
 
-variable "dynatrace_hostgroup" {}
+#variable "dynatrace_hostgroup" {}
 
 variable "mgmtprod_subscription_id" {
   default = "8999dec3-0104-4a27-94ee-6588559729d1"
