@@ -37,6 +37,10 @@ variable "vm_disk_type" {
   type = "string"
   default = "Standard_LRS"
 }
+  
+variable "name" {
+  type = "string"
+}
 
 variable "dynatrace_instance" {}
 
