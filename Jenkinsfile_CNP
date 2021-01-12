@@ -34,12 +34,12 @@ node {
 
                 stage("Create Logstash resource group - ${productName}") {
                         onMaster {
-                                withSubscription('nonprod') {
-                                        sh 'terraform init'
-                                        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.nonProdName}' -var 'name=${productName}' -var " +
-                                                "'subscription=nonprod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
-                                                (fileExists("${environment.nonProdName}.tfvars") ? " -var-file=${environment.nonProdName}.tfvars" : "")
-                                }
+                                //withSubscription('nonprod') {
+                                //        sh 'terraform init'
+                                //        sh "terraform apply -auto-approve -var common_tags={} -var 'env=${environment.nonProdName}' -var 'name=${productName}' -var " +
+                                 //               "'subscription=nonprod' -var 'product=${productName}' -target=azurerm_resource_group.logstash-resourcegroup" +
+                                 //               (fileExists("${environment.nonProdName}.tfvars") ? " -var-file=${environment.nonProdName}.tfvars" : "")
+                                //}
 
                                 withSubscription('prod') {
                                         sh 'terraform init'
