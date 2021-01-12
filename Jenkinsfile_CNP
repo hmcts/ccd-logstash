@@ -151,8 +151,8 @@ node {
 
         if (params.DEPLOY_LOGSTASH == true) {
                 onMaster {
-                        withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
-                        healthCheckStage(environment.nonProdName)
+                        //withInfrastructurePipeline(productName, environment.nonProdName, 'nonprod')
+                        //healthCheckStage(environment.nonProdName)
 
                         withInfrastructurePipeline(productName, environment.prodName, 'prod')
                         healthCheckStage(environment.prodName)
