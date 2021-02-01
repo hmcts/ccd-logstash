@@ -13,8 +13,8 @@ input {
 
         use_column_value => false
 
-        parameters => {
-                        "jurisdiction" => "DIVORCE"
+        parameters => { 
+                        "state" => "DRAFT"
                       }
 
         statement => "UPDATE case_data SET marked_by_logstash = true WHERE marked_by_logstash = false AND jurisdiction = :jurisdiction RETURNING id, created_date, last_modified, jurisdiction, case_type_id, state, last_state_modified_date, data::TEXT as json_data, data_classification::TEXT as json_data_classification, reference, security_classification, supplementary_data::TEXT as json_supplementary_data"
