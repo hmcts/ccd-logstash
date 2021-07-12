@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "updating apt-get"
-(sudo apt-get -y update || (sleep 15; sudo apt-get -y update)) > /dev/null
+(sudo apt-get -y update && sudo apt-get -y install -f && sudo apt-get -y autoremove || (sleep 15; sudo apt-get -y update)) > /dev/null
 echo "updated apt-get"
 echo "installing java"
 (sudo apt-get -yq install openjdk-8-jdk || (sleep 15; sudo apt-get -yq install openjdk-8-jdk))
