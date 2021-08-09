@@ -94,9 +94,7 @@ filter{
 
     # mutate { remove_field => [ "@timestamp", "@version" ] }
 	mutate {
-    	add_field => {
-    	    "index_id" => "%{case_type_id}_cases"
-           }
+    	add_field => {"index_id" => "%{case_type_id}_cases" }
   	}
 	mutate {
 		lowercase => [ "index_id" ]
