@@ -37,7 +37,7 @@ filter{
 	json{
 		source => "json_data"
 		target => "data"
-        remove_field => ["json_data"]
+		remove_field => ["json_data"]
 	}
 	json{
 		source => "json_data_classification"
@@ -92,18 +92,16 @@ filter{
          }
     }
 
+    # mutate { remove_field => [ "@timestamp", "@version" ] }
 	mutate {
     	add_field => {
     	    "index_id" => "%{case_type_id}_cases"
            }
   	}
-
 	mutate {
 		lowercase => [ "index_id" ]
 	}
 }
-
-
 
 #TODO future releases of ES will use _doc as mapping type. When LS sets _doc as the default type, remove 'document_type'
 output {
