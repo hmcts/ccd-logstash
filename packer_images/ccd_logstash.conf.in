@@ -37,7 +37,7 @@ filter{
 	json{
 		source => "json_data"
 		target => "data"
-		remove_field => ["json_data"]
+        remove_field => ["json_data"]
 	}
 	json{
 		source => "json_data_classification"
@@ -49,14 +49,61 @@ filter{
     	target => "supplementary_data"
     	remove_field => ["json_supplementary_data"]
     }
-	# mutate { remove_field => [ "@timestamp", "@version" ] }
+
+    json{
+    	source => "[data][SearchCriteria][SearchParties]"
+    	target => "[data][SearchCriteria][SearchParties]"
+    }
+
+    if [data][SearchCriteria][SearchParties] {
+            mutate {
+                 add_field => {"test_SearchParties" => "%{[data][SearchCriteria][SearchParties]}" }
+        }
+    }
+
+
+    if [data][SearchCriteria][OtherCaseReferences] {
+       mutate {
+             add_field => {"test_OtherCaseReferences" => "%{[data][SearchCriteria][OtherCaseReferences]}" }
+       }
+    }
+
+    if [supplementary_data][HMCTSServiceId] {
+        mutate {
+           add_field => {"test_HMCTSServiceId" => "%{[supplementary_data][HMCTSServiceId]}" }
+        }
+    }
+
+    if [data][caseNameHmctsInternal] {
+       mutate {
+           add_field => {"test_caseNameHmctsInternal" => "%{[data][caseNameHmctsInternal]}" }
+       }
+    }
+
+    if [data][caseManagementLocation][region] {
+       mutate {
+         add_field => {"test_region" => "%{[data][caseManagementLocation][region]}" }
+       }
+     }
+
+     if [data][caseManagementLocation][baseLocation] {
+           mutate {
+                add_field => {"test_baseLocation" => "%{[data][caseManagementLocation][baseLocation]}" }
+         }
+    }
+
 	mutate {
-    	add_field => { "index_id" => "%{case_type_id}_cases" }
+    	add_field => {
+    	    "index_id" => "%{case_type_id}_cases"
+           }
   	}
+
 	mutate {
 		lowercase => [ "index_id" ]
 	}
 }
+
+
 
 #TODO future releases of ES will use _doc as mapping type. When LS sets _doc as the default type, remove 'document_type'
 output {
