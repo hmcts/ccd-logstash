@@ -34,81 +34,102 @@ input {
 }
 
 filter{
-	json{
-		source => "json_data"
-		target => "data"
-		remove_field => ["json_data"]
-	}
-	json{
-		source => "json_data_classification"
-		target => "data_classification"
-		remove_field => ["json_data_classification"]
-	}
-	json{
-    	source => "json_supplementary_data"
-    	target => "supplementary_data"
-    	remove_field => ["json_supplementary_data"]
+    json{
+    	source => "json_data"
+    	target => "data"
+    	remove_field => ["json_data"]
     }
 
     json{
-    	source => "[data][SearchCriteria][SearchParties]"
-    	target => "[data][SearchCriteria][SearchParties]"
+         source => "json_supplementary_data"
+         target => "supplementary_data"
+         remove_field => ["json_supplementary_data"]
     }
 
-    if [data][SearchCriteria][SearchParties] {
-            mutate {
-                 add_field => {"test_SearchParties" => "%{[data][SearchCriteria][SearchParties]}" }
-        }
+    json{
+         source => "json_data_classification"
+         target => "data_classification"
+         remove_field => ["json_data_classification"]
     }
 
-
-    if [data][SearchCriteria][OtherCaseReferences] {
-       mutate {
-             add_field => {"test_OtherCaseReferences" => "%{[data][SearchCriteria][OtherCaseReferences]}" }
-       }
+    clone {
+        clones => ["SearchCriteria"]
     }
 
-    if [supplementary_data][HMCTSServiceId] {
-        mutate {
-           add_field => {"test_HMCTSServiceId" => "%{[supplementary_data][HMCTSServiceId]}" }
-        }
-    }
-
-    if [data][caseNameHmctsInternal] {
-       mutate {
-           add_field => {"test_caseNameHmctsInternal" => "%{[data][caseNameHmctsInternal]}" }
-       }
-    }
-
-    if [data][caseManagementLocation][region] {
-       mutate {
-         add_field => {"test_region" => "%{[data][caseManagementLocation][region]}" }
-       }
-     }
-
-     if [data][caseManagementLocation][baseLocation] {
+    if [type] == "SearchCriteria" {
+        if [data][SearchCriteria][SearchParties] {
            mutate {
-                add_field => {"test_baseLocation" => "%{[data][caseManagementLocation][baseLocation]}" }
-         }
-    }
+              rename => {"[data][SearchCriteria][SearchParties]" => "SearchParties" }
+           }
+        }
+        if [data][SearchCriteria][OtherCaseReferences] {
+           mutate {
+              rename => {"[data][SearchCriteria][OtherCaseReferences]" => "OtherCaseReferences" }
+           }
+        }
+        if [supplementary_data][HMCTSServiceId] {
+           mutate {
+              rename => {"[supplementary_data][HMCTSServiceId]" => "HMCTSServiceId" }
+           }
+        }
 
-    # mutate { remove_field => [ "@timestamp", "@version" ] }
-	mutate {
-    	add_field => {"index_id" => "%{case_type_id}_cases" }
-  	}
-	mutate {
-		lowercase => [ "index_id" ]
-	}
+        if [data][caseNameHmctsInternal] {
+           mutate {
+              rename => {"[data][caseNameHmctsInternal]" => "caseNameHmctsInternal" }
+           }
+        }
+
+        if [data][caseManagementLocation][RegionId] {
+            mutate {
+               rename => {"[data][caseManagementLocation][RegionId]" => "region" }
+            }
+        }
+
+        if [data][caseManagementLocation][BaseLocationId] {
+            mutate {
+              rename => {"[data][caseManagementLocation][BaseLocationId]" => "baseLocation" }
+            }
+        }
+        mutate {
+            rename => { "[reference]" => "caseReference"}
+            rename => { "[jurisdiction]"  => "jurisdictionId"}
+            rename => { "[state]"  => "stateId"}
+            rename => { "[case_type_id]"  => "caseTypeId"}
+        }
+        mutate {
+           add_field => { "index_id" => "%{caseTypeId}_cases" }
+        }
+        mutate {
+           lowercase => [ "index_id" ]
+        }
+
+       mutate { remove_field => [ "last_state_modified_date", "@timestamp", "@version", "type","last_modified", "created_date", "security_classification", "json_data_classification", "supplementary_data", "data" ]}
+    } else {
+	      # mutate { remove_field => [ "@timestamp", "@version" ] }
+          mutate {
+             rename => { "[caseReference]" => "reference"}
+             rename => { "[jurisdictionId]"  => "jurisdiction"}
+             rename => { "[stateId]"  => "state"}
+             rename => { "[caseTypeId]"  => "case_type_id"}
+          }
+          mutate {
+        	 add_field => { "index_id" => "%{case_type_id}_cases" }
+      	  }
+	      mutate {
+		     lowercase => [ "index_id" ]
+	      }
+       }
 }
 
 #TODO future releases of ES will use _doc as mapping type. When LS sets _doc as the default type, remove 'document_type'
 output {
-    elasticsearch {
-        hosts => ["${ES_DATA_NODES_URL}"]
-        sniffing => false
-        index => "%{[index_id]}"
-        document_type => "_doc"
-        document_id => "%{id}"
-        timeout => 60
-    }
+     elasticsearch {
+            hosts => ["${ES_DATA_NODES_URL}"]
+            sniffing => false
+            index => "%{[index_id]}"
+            document_type => "_doc"
+            document_id => "%{id}"
+            timeout => 60
+
+     }
 }
