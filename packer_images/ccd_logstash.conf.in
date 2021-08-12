@@ -97,7 +97,7 @@ filter{
             rename => { "[case_type_id]"  => "caseTypeId"}
         }
         mutate {
-           add_field => { "index_id" => "%{caseTypeId}_cases" }
+           add_field => { "index_id" => "%{caseTypeId}_global_cases" }
         }
         mutate {
            lowercase => [ "index_id" ]
