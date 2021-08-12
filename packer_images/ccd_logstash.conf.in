@@ -97,21 +97,15 @@ filter{
             rename => { "[case_type_id]"  => "caseTypeId"}
         }
         mutate {
-           add_field => { "index_id" => "%{caseTypeId}_global_cases" }
+           add_field => { "index_id" => "global_search" }
         }
         mutate {
            lowercase => [ "index_id" ]
         }
 
-       mutate { remove_field => [ "last_state_modified_date", "@timestamp", "@version", "type","last_modified", "created_date", "security_classification", "json_data_classification", "supplementary_data", "data" ]}
+       mutate { remove_field => [ "last_state_modified_date", "@timestamp", "@version", "type","last_modified", "created_date", "security_classification","json_data_classification", "data_classification", "json_supplementary_data", "data" ]}
     } else {
 	      # mutate { remove_field => [ "@timestamp", "@version" ] }
-          mutate {
-             rename => { "[caseReference]" => "reference"}
-             rename => { "[jurisdictionId]"  => "jurisdiction"}
-             rename => { "[stateId]"  => "state"}
-             rename => { "[caseTypeId]"  => "case_type_id"}
-          }
           mutate {
         	 add_field => { "index_id" => "%{case_type_id}_cases" }
       	  }
