@@ -52,8 +52,10 @@ filter{
          remove_field => ["json_data_classification"]
     }
 
-    clone {
-        clones => ["SearchCriteria"]
+    if [data][SearchCriteria] {
+        clone {
+            clones => ["SearchCriteria"]
+        }
     }
 
     if [type] == "SearchCriteria" {
@@ -103,9 +105,8 @@ filter{
            lowercase => [ "index_id" ]
         }
 
-       mutate { remove_field => [ "last_state_modified_date", "@timestamp", "@version", "type","last_modified", "created_date", "security_classification","json_data_classification", "data_classification", "json_supplementary_data", "data" ]}
+       mutate { remove_field => [ "last_state_modified_date", "type","last_modified", "created_date", "security_classification","json_data_classification", "data_classification", "json_supplementary_data", "data" ]}
     } else {
-	      # mutate { remove_field => [ "@timestamp", "@version" ] }
           mutate {
         	 add_field => { "index_id" => "%{case_type_id}_cases" }
       	  }
