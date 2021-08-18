@@ -81,15 +81,15 @@ filter{
            }
         }
 
-        if [data][caseManagementLocation][RegionId] {
+        if [data][caseManagementLocation][region] {
             mutate {
-               rename => {"[data][caseManagementLocation][RegionId]" => "region" }
+               rename => {"[data][caseManagementLocation][region]" => "region" }
             }
         }
 
-        if [data][caseManagementLocation][BaseLocationId] {
+        if [data][caseManagementLocation][baseLocation] {
             mutate {
-              rename => {"[data][caseManagementLocation][BaseLocationId]" => "baseLocation" }
+              rename => {"[data][caseManagementLocation][baseLocation]" => "baseLocation" }
             }
         }
         mutate {
