@@ -59,45 +59,6 @@ filter{
     }
 
     if [type] == "SearchCriteria" {
-        if [data][SearchCriteria][SearchParties] {
-           mutate {
-              rename => {"[data][SearchCriteria][SearchParties]" => "SearchParties" }
-           }
-        }
-        if [data][SearchCriteria][OtherCaseReferences] {
-           mutate {
-              rename => {"[data][SearchCriteria][OtherCaseReferences]" => "OtherCaseReferences" }
-           }
-        }
-        if [supplementary_data][HMCTSServiceId] {
-           mutate {
-              rename => {"[supplementary_data][HMCTSServiceId]" => "HMCTSServiceId" }
-           }
-        }
-
-        if [data][caseNameHmctsInternal] {
-           mutate {
-              rename => {"[data][caseNameHmctsInternal]" => "caseNameHmctsInternal" }
-           }
-        }
-
-        if [data][caseManagementLocation][region] {
-            mutate {
-               rename => {"[data][caseManagementLocation][region]" => "region" }
-            }
-        }
-
-        if [data][caseManagementLocation][baseLocation] {
-            mutate {
-              rename => {"[data][caseManagementLocation][baseLocation]" => "baseLocation" }
-            }
-        }
-        mutate {
-            rename => { "[reference]" => "caseReference"}
-            rename => { "[jurisdiction]"  => "jurisdictionId"}
-            rename => { "[state]"  => "stateId"}
-            rename => { "[case_type_id]"  => "caseTypeId"}
-        }
         mutate {
            add_field => { "index_id" => "global_search" }
         }
@@ -105,7 +66,7 @@ filter{
            lowercase => [ "index_id" ]
         }
 
-       mutate { remove_field => [ "last_state_modified_date", "type","last_modified", "created_date", "security_classification","json_data_classification", "data_classification", "json_supplementary_data", "supplementary_data", "data" ]}
+       mutate { remove_field => [ "last_state_modified_date", "type","last_modified", "created_date" ]}
     } else {
           mutate {
         	 add_field => { "index_id" => "%{case_type_id}_cases" }
