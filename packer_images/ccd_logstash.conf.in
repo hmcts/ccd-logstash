@@ -59,16 +59,12 @@ filter{
     }
 
     if [type] == "SearchCriteria" {
-        if [data][SearchCriteria][SearchParties] {
+        if [data][SearchCriteria] {
             mutate {
-               rename => {"[data][SearchCriteria][SearchParties]" => "[data_new][SearchCriteria][SearchParties]" }
+               rename => {"[data][SearchCriteria]" => "[data_new][SearchCriteria]" }
             }
         }
-        if [data][SearchCriteria][OtherCaseReferences] {
-            mutate {
-               rename => {"[data][SearchCriteria][OtherCaseReferences]" => "[data_new][SearchCriteria][OtherCaseReferences]" }
-            }
-        }
+
         if [data][caseManagementLocation] {
             mutate {
                rename => {"[data][caseManagementLocation]" => "[data_new][caseManagementLocation]" }
@@ -89,14 +85,9 @@ filter{
                rename => {"[supplementary_data][HMCTSServiceId]" => "[supplementary_data_new][HMCTSServiceId]" }
             }
         }
-        if [data_classification][SearchCriteria][value][SearchParties] {
+        if [data_classification][SearchCriteria] {
             mutate {
-               rename => {"[data_classification][SearchCriteria][value][SearchParties]" => "[data_classification_new][SearchCriteria][value][SearchParties]" }
-            }
-        }
-        if [data_classification][SearchCriteria][value][OtherCaseReferences] {
-            mutate {
-               rename => {"[data_classification][SearchCriteria][value][OtherCaseReferences]" => "[data_classification_new][SearchCriteria][value][OtherCaseReferences]" }
+               rename => {"[data_classification][SearchCriteria]" => "[data_classification_new][SearchCriteria]" }
             }
         }
         if [data_classification][caseManagementLocation] {
