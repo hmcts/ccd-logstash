@@ -106,7 +106,7 @@ filter{
                rename => {"[data_classification][caseManagementCategory]" => "[data_classification_new][caseManagementCategory]" }
             }
         }
-        mutate { remove_field =>[ "data" ,"supplementary_data", "data_classification" ] }
+        mutate { remove_field =>[ "data" ,"supplementary_data", "data_classification", "last_state_modified_date", "type","last_modified", "created_date" ] }
 
         mutate {
                 rename => { "[data_new]" => "data" }
@@ -120,8 +120,6 @@ filter{
         mutate {
            lowercase => [ "index_id" ]
         }
-
-       mutate { remove_field => [ "last_state_modified_date", "type","last_modified", "created_date" ]}
     } else {
         mutate {
             add_field => { "index_id" => "%{case_type_id}_cases" }
