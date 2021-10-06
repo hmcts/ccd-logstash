@@ -59,61 +59,75 @@ filter{
     }
 
     if [type] == "SearchCriteria" {
-        if [data][SearchCriteria][SearchParties] {
-           mutate {
-              rename => {"[data][SearchCriteria][SearchParties]" => "SearchParties" }
-           }
+        if [data][SearchCriteria] {
+            mutate {
+               rename => {"[data][SearchCriteria]" => "[data_new][SearchCriteria]" }
+            }
         }
-        if [data][SearchCriteria][OtherCaseReferences] {
-           mutate {
-              rename => {"[data][SearchCriteria][OtherCaseReferences]" => "OtherCaseReferences" }
-           }
+
+        if [data][caseManagementLocation] {
+            mutate {
+               rename => {"[data][caseManagementLocation]" => "[data_new][caseManagementLocation]" }
+            }
+        }
+        if [data][caseNameHmctsInternal] {
+            mutate {
+               rename => {"[data][caseNameHmctsInternal]" => "[data_new][caseNameHmctsInternal]" }
+            }
+        }
+        if [data][caseManagementCategory] {
+            mutate {
+               rename => {"[data][caseManagementCategory]" => "[data_new][caseManagementCategory]" }
+            }
         }
         if [supplementary_data][HMCTSServiceId] {
-           mutate {
-              rename => {"[supplementary_data][HMCTSServiceId]" => "HMCTSServiceId" }
-           }
-        }
-
-        if [data][caseNameHmctsInternal] {
-           mutate {
-              rename => {"[data][caseNameHmctsInternal]" => "caseNameHmctsInternal" }
-           }
-        }
-
-        if [data][caseManagementLocation][region] {
             mutate {
-               rename => {"[data][caseManagementLocation][region]" => "region" }
+               rename => {"[supplementary_data][HMCTSServiceId]" => "[supplementary_data_new][HMCTSServiceId]" }
+            }
+        }
+        if [data_classification][SearchCriteria] {
+            mutate {
+               rename => {"[data_classification][SearchCriteria]" => "[data_classification_new][SearchCriteria]" }
+            }
+        }
+        if [data_classification][caseManagementLocation] {
+           mutate {
+              rename => {"[data_classification][caseManagementLocation]" => "[data_classification_new][caseManagementLocation]" }
+           }
+        }
+        if [data_classification][caseNameHmctsInternal] {
+            mutate {
+               rename => {"[data_classification][caseNameHmctsInternal]" => "[data_classification_new][caseNameHmctsInternal]" }
             }
         }
 
-        if [data][caseManagementLocation][baseLocation] {
+        if [data_classification][caseManagementCategory] {
             mutate {
-              rename => {"[data][caseManagementLocation][baseLocation]" => "baseLocation" }
+               rename => {"[data_classification][caseManagementCategory]" => "[data_classification_new][caseManagementCategory]" }
             }
         }
+        mutate { remove_field =>[ "data" ,"supplementary_data", "data_classification", "last_state_modified_date", "type" ] }
+
         mutate {
-            rename => { "[reference]" => "caseReference"}
-            rename => { "[jurisdiction]"  => "jurisdictionId"}
-            rename => { "[state]"  => "stateId"}
-            rename => { "[case_type_id]"  => "caseTypeId"}
+                rename => { "[data_new]" => "data" }
+                rename => { "[supplementary_data_new]"  => "supplementary_data" }
+                rename => { "[data_classification_new]"  => "data_classification" }
         }
+
         mutate {
            add_field => { "index_id" => "global_search" }
         }
         mutate {
            lowercase => [ "index_id" ]
         }
-
-       mutate { remove_field => [ "last_state_modified_date", "type","last_modified", "created_date", "security_classification","json_data_classification", "data_classification", "json_supplementary_data", "supplementary_data", "data" ]}
     } else {
-          mutate {
-        	 add_field => { "index_id" => "%{case_type_id}_cases" }
-      	  }
-	      mutate {
-		     lowercase => [ "index_id" ]
-	      }
-       }
+        mutate {
+            add_field => { "index_id" => "%{case_type_id}_cases" }
+      	}
+	    mutate {
+		    lowercase => [ "index_id" ]
+	    }
+    }
 }
 
 #TODO future releases of ES will use _doc as mapping type. When LS sets _doc as the default type, remove 'document_type'
