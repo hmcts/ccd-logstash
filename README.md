@@ -1,3 +1,6 @@
+# This project is no longer maintained. Logstash configs are now held in [https://github.com/hmcts/ccd-docker](ccd-docker) (for local development) and [https://github.com/hmcts/cnp-flux-config](cnp-flux-config) (for other environments).
+
+
 # ccd-logstash
 
 This repository contains a pipeline to: 
